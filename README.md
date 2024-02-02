@@ -43,21 +43,39 @@ Mục tiêu là sử dụng Django framework:
 ### Session 04 - Models and databases
 
 1. Query Data: select, update, delete
-
-### Session 05 - Working with forms
-
-### Session 06 - Authentication
-
-1. Tìm hiểu về Middleware
-1. Tìm hiểu về Session
+1. Pagination
 
 ### Session 07 - Django Admin 
 
+
+1. Admin site
+1. Admin actions
+1. Admin documentation generator
+
+### Session 05 - Working with forms
+
+1. View decorators
+1. Methods Form
+1. File Uploads
+
 ### Session 08 - Advanced
 
-### Session 09 - Security and Performance
+1. Tìm hiểu về Middleware
+1. Tìm hiểu về Session
+1. Send email
+1. Caching
+1. Logging
+1. Validation Data
+
+### Session 06 - Authentication
+
+1. Phân quyền truy cập
+
 
 ### Session 10 - Restful API
+
+1. Tạo một resource API
+
 
 ## Documents
 
