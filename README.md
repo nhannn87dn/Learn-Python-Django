@@ -34,7 +34,7 @@ Mục tiêu là sử dụng Django framework:
 1. Tìm hiểu về View
 1. Tìm hiểu về Template
 
-### Session 03 - Models and databases
+### Session 03 - Model and databases
 
 1. Cấu hình kết nối Database
 1. Tìm hiểu về Model
@@ -47,14 +47,14 @@ Mục tiêu là sử dụng Django framework:
 1. Admin actions
 1. Admin documentation generator
 
-### Session 05 - Working with forms
+### Session 05 - Forms
 
 1. View decorators
 1. Methods Form
 1. File Uploads
 
 
-### Session 06 - Models and databases
+### Session 06 - Queries
 
 1. Query Data: select, update, delete, relationships
 1. Pagination, Sắp xếp dữ liệu

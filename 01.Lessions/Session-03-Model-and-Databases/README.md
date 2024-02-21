@@ -249,3 +249,19 @@ py manage.py migrate
 #MacOS, Ubuntu
 python manage.py migrate
 ```
+
+Django sẽ tạo table `categories` vào trong Datatabase thật mà đã cấu hình trong `settings.py`
+
+
+## 💛 Homeworks Guide
+
+Thực hành tạo các Model
+
+- brands
+- products
+- customers
+- stores
+- staffs
+- orders
+- order_items
+- stocks
