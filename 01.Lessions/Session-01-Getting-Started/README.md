@@ -217,9 +217,12 @@ Như vậy là bạn đã tạo thành công dự án website với Django Frame
 
 ## 💛Tạo một App mới trong Django framework
 
+
+Trong Django, một ứng dụng (app) thường được sử dụng để đóng gói một chức năng hoặc một tập hợp các chức năng liên quan. Mỗi ứng dụng có thể chứa nhiều model, và mỗi model tương ứng với một bảng trong cơ sở dữ liệu.
+
 Một trang web sẽ có nhiều trang, theo concept của Django thì môi trang như vậy là một `app` (ứng dụng)
 
-Dự kiên các trang trong một trang web bán hàng xe đẹp
+Dự kiên các trang trong một trang web bán hàng xe đạp
 
 ```html
 ├── / - Trang chủ

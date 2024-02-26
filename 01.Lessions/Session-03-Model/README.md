@@ -46,16 +46,6 @@ DATABASES = {
 }
 ```
 
-Sau đó bạn thực hiện chạy lệnh
-
-```bash
-py manage.py migrate
-```
-
-Để hệ thống kết nối và khởi tạo CSDL mặc định cho dự án. Bạn kiểm tra Database sẽ thấy như hình sau:
-
-![tables](img/tables.png)
-
 
 ## 💛 Tìm hiểu về Model
 
@@ -66,9 +56,82 @@ Tài liệu về Model:
 - https://docs.djangoproject.com/en/5.0/ref/models/
 - https://docs.djangoproject.com/en/5.0/topics/db/models/
 
+Lưu ý quan trọng
+
+Khi bạn `migrate` thì Django sẽ tạo ra các table để phục vụ cho việc xác thực người dùng. Và nếu bạn có nhu cầu mở rộng thì khó khắn cho việc làm thế nào để mở rộng.
+
+Do vậy ngay từ lần `migrate` đầu tiên trong project Django HÃY NÊN làm điều này trước.
+
+==> Custom Model Xác thực
+
+Tương ứng trong mô hình CSDL đã học thì `table staffs` là table để login và đăng nhập cho quản trị viên.
+
+```bash
+py manage.py startapp staff
+python  manage.py startapp staff
+```
+
 ### 🔥 Định nghĩa một Model
 
-Ví dụ bạn tạo model categories `categories/models.py`
+Custome Model Staff trước, sửa file `staff/models.py`
+
+```python
+from django.db import models
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
+
+class Staff(AbstractUser, PermissionsMixin):
+    class Meta:
+        #Đổi tên table thành projectName_table_name
+        db_table = 'bs_staffs'
+        #Sắp xếp mặc định
+        ordering = ['-id', 'first_name']
+        
+        
+    #Để hiện thị tên ở trong list Dashboard
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
+    
+    avatar = models.ImageField(upload_to='upload/%Y/%m')
+
+```
+
+Cấu hình tập tin `settings.py`
+
+```python
+#Đăng ký thêm app Staff vào
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'home',
+    'staff' # ==> Thêm app staff vào
+]
+
+#Bạn cần thêm biến
+AUTH_USER_MODEL = 'staff.Staff'
+```
+
+Cài thêm thư viện Pillow vào môi trường ảo.
+
+Vì `ImageField` tạo ra cơ chế upload và cần `Pillow` để xử lý hình ảnh.
+
+```bash
+py -m pip install Pillow
+```
+
+Bạn tạo ra Model `Staff` trước như vậy.
+
+Sau khi `migrate` bạn sẽ thấy Django tạo ra 3 table `bs_staff`, `bs_staffs_groups` và `bs_staffs_user_permissions` thay cho các table mặc định `auth_user`, `auth_groups` và `auth_user_user_permissions`
+
+Chúng ta tìm hiểu về xác thực và phân quyền trong bài học sau.
+
+---
+
+Ví dụ bạn tạo model Category bằng cách sửa file   `category/models.py` thành như sau
+
 
 ```python
 from django.db import models
@@ -81,7 +144,7 @@ class Category(models.Model):
     description = models.CharField(max_length=500)
 ```
 
-Khi bạn tạo table thì đồng nghĩa nó cũng tạo table categories và đồng bộ vào Database.
+Khi bạn tạo table thì đồng nghĩa nó cũng tạo table category và đồng bộ vào Database.
 
 Bạn phải chắc chắn rằng đã thêm dòng này vào `INSTALLED_APPS` trong file settings.py
 
@@ -94,23 +157,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     ##
-    "categories.apps.CategoryConfig", # thêm vào
-    'categories',
     'home',
+    'staff',
+    'category',
 ]
 ```
-Để đổi đặt tên table theo ý mình. Bạn sửa model.py và thêm đoạn này vào.
 
 ```python
 from django.db import models
 
 # Create your models here.
 class Category(models.Model):
-
-    # Đặt tên cho table
-    # Còn không được tạo tự động
-    class Meta:
-        db_table = 'categories'
 
     # Trường category_name
     category_name = models.CharField(max_length=50)
@@ -249,14 +306,14 @@ Tiếp nối ví dụ trên bạn nhập lệnh
 
 ```bash
 #window
-py manage.py makemigrations categories
+py manage.py makemigrations category
 #MacOS, Ubuntu
-python manage.py makemigrations categories
+python manage.py makemigrations category
 ```
 
 Kiểu như bạn đặt tên cho những thay đổi lên model.
 
-Hệ thống sẽ sinh ra một file `categories/migrations/0001_initial.py`. Để lưu lại những thay đổi này.
+Hệ thống sẽ sinh ra một file `category/migrations/0001_initial.py`. Để lưu lại những thay đổi này.
 
 Để áp dụng những thay đổi đó bạn chạy lệnh
 
@@ -267,7 +324,7 @@ py manage.py migrate
 python manage.py migrate
 ```
 
-Django sẽ tạo table `categories` vào trong Datatabase thật mà đã cấu hình trong `settings.py`
+Django sẽ tạo table `category` vào trong Datatabase thật mà đã cấu hình trong `settings.py`
 
 
 ## 💛 Truy vấn Model trên Python Shell
@@ -294,7 +351,7 @@ Ví dụ bạn muốn thao tác với Model `Category` để truy vấn dữ li�
 Bước 1: Bạn phải nhúng Model cần thao tác vào shell
 
 ```bash
->>> from categories.models import Category #nhấn Enter
+>>> from category.models import Category #nhấn Enter
 ```
 Bước 2: Sau đó bạn có thể thao tác với mọi thứ với `Category` và Django đã thiết lập cho nó.
 
@@ -328,7 +385,7 @@ Bạn có thể kiểm tra lại dữ liệu bằng cách
 ```bash
 >>> Category.objects.all().values() #Enter
 # Tương đương câu lệnh
-# SELECT * FROM categories
+# SELECT * FROM category
 ```
 
 
@@ -488,6 +545,23 @@ Ví dụ:
 ```python
 from django.db import models
 
+# Create your models here.
+class Category(models.Model):
+    class Meta:
+        #Đặt tên table
+        db_table = 'bs_categories'
+        #Cấu hình sắp xếp mặc định
+        ordering = ['category_name']
+
+    # Trường category_name
+    category_name = models.CharField(max_length=50)
+    # Trường description
+    description = models.CharField(max_length=500)
+```
+
+```python
+from django.db import models
+
 class Product(models.Model):
     class Meta:
         #Đặt tên table
@@ -522,6 +596,15 @@ Bạn cần nắm các cú pháp để khai báo mối quan hệ giữa các Mod
 ### 🔥 Many-to-one
 
 Để định nghĩa quan hệ Many-to-one, bạn sử dụng `django.db.models.ForeignKey` khi báo trường đó trong Model
+
+Lớp này cần đối số:
+
+- model: Model cần tham chiếu tới
+- on_delete: Hành động thực hiện cho dòng dữ liệu của table CON khi CHA bị XÓA
+
+Các trường `ForeignKey` sẽ được đánh index tự động (db_index=True)
+Khi thực hiện  `mirgate` để tạo CSDL thì Django tự động thêm đuôi _id vào tên trường ForeignKey. Ví dụ: category, dưới CDSL sẽ là category_id.
+
 
 ```python
 
@@ -721,6 +804,29 @@ py manage.py migrate
 python manage.py makemigrations app_name
 python manage.py migrate
 ```
+
+## 💛 Xóa một Model đã tạo
+
+Để xóa một Model đã định nghĩa trong Django, bạn cần thực hiện các bước sau:
+
+1. Đảm bảo không có app nào đang sử dụng model này nữa
+2. Xóa hoặc comment out class Model tương ứng trong file `models.py`.
+3. Chạy lệnh `makemigrations` để tạo ra migration mới:
+
+```bash
+python manage.py makemigrations
+```
+
+4. Chạy lệnh `migrate` để áp dụng các thay đổi vào cơ sở dữ liệu:
+
+```bash
+python manage.py migrate
+```
+
+
+Lưu ý rằng, việc xóa một Model sẽ xóa bảng tương ứng trong cơ sở dữ liệu, do đó tất cả dữ liệu trong bảng đó cũng sẽ bị xóa. Nếu bạn muốn giữ lại dữ liệu, hãy sao lưu cơ sở dữ liệu trước khi xóa Model.
+
+Ngoài ra, nếu Model bạn muốn xóa có mối quan hệ với các Model khác thông qua ForeignKey hoặc các trường quan hệ khác, bạn cần xử lý những mối quan hệ này trước khi xóa Model. Cách tiếp cận phụ thuộc vào yêu cầu cụ thể của ứng dụng của bạn.
 
 
 ## 💛 Homeworks Guide

@@ -25,21 +25,21 @@ Theo cách triển khai của Django, view sẽ thể hiện dữ liệu trả v
 
 Cùng tìm hiểu `View` qua một ví dụ
 
-Tạo một app mới tên là `categories`
+Tạo một app mới tên là `category`
 
 ```bash
 # Windows
-py manage.py startapp categories
+py manage.py startapp category
 # MacOS, Ubuntu
-$ python manage.py startapp categories
+$ python manage.py startapp category
 ```
 
-Bạn sửa lại file `categories/view.py` thành như sau
+Bạn sửa lại file `category/view.py` thành như sau
 
 ```python
 from django.http import HttpResponse
 
-#URL: localhost:8000/categories
+#URL: localhost:8000/category
 # Hàm này hiển thị danh sách các danh mục
 # Đặt tên hàm là index để hiểu là entry point như trong MVC
 def index(request):
@@ -78,7 +78,7 @@ Cách hoạt động ứng dụng web:
 
 ### 🔥 Requests
 
-Trong ví dụ về `app categories` trên bạn thấy trong hàm `index(request)` nhận vào tham số `request`
+Trong ví dụ về `app category` trên bạn thấy trong hàm `index(request)` nhận vào tham số `request`
 
 Request mang theo một trong các methods: GET, POST, PUT, DELETE. Mặc định được hiểu là GET.
 
@@ -236,14 +236,14 @@ from django.http import HttpResponse
 from django.template import loader
 
 
-#URL: localhost:8000/categories
+#URL: localhost:8000/category
 # Hàm này hiển thị danh sách các danh mục
-def categoriesList(request):
+def categoryList(request):
     
-    template = loader.get_template('categories_list.html')
+    template = loader.get_template('category_list.html')
     # Tạo một context chứa các biến muốn sử dụng trong template
     context = {
-        'categories': {
+        'category': {
             'id': 1, 
             'name': 'Mobile'
         },
@@ -254,9 +254,9 @@ def categoriesList(request):
 
 Bước 2: Tạo `template` cho view
 
-Trong thư mục `categories/templates`
+Trong thư mục `category/templates`
 
-Tạo tiếp file `categories/templates/categories_list.html`
+Tạo tiếp file `category/templates/category_list.html`
 
 ```django
 <!DOCTYPE html>
@@ -267,16 +267,16 @@ Tạo tiếp file `categories/templates/categories_list.html`
     <title>Categories</title>
 </head>
 <body>
-    <p>My Category ID is {{ categories.id }}. My Category name is {{ categories.name }}.</p>
+    <p>My Category ID is {{ category.id }}. My Category name is {{ category.name }}.</p>
 </body>
 </html>
 ```
 
-Trong đó `categories_list.html` là tên của Template. Không nên đặt tên trùng nhau giữa các `app` để gây ra sử dụng nhầm.
+Trong đó `category_list.html` là tên của Template. Không nên đặt tên trùng nhau giữa các `app` để gây ra sử dụng nhầm.
 
 Bước 3: Gắn `view` cho url
 
-Sửa file `categories/url.py`
+Sửa file `category/url.py`
 
 ```python
 from django.urls import path
@@ -285,19 +285,19 @@ from . import views
 
 # Khai báo url cho view ở bên file view
 # Tham số đầu tiên trong hàm path
-# chính là URL tính tại vị trí của app categories
-# Tương đương với http://127.0.0.1:8000/categories/
+# chính là URL tính tại vị trí của app category
+# Tương đương với http://127.0.0.1:8000/category/
 urlpatterns = [
-    path("", views.categoriesList, name="categories_list"),
+    path("", views.categoryList, name="category_list"),
 ]
 
-#categories_list là tên bạn đặt cho view, không được trùng nhau trong cả project
+#category_list là tên bạn đặt cho view, không được trùng nhau trong cả project
 ```
 
-Bước 4: Cấu hình `app categories` vào Django
+Bước 4: Cấu hình `app category` vào Django
 
 Mở trong file `bikestore/settings.py`, tìm đến biến `INSTALLED_APPS`
-Bổ sung `categories` vào mảng này
+Bổ sung `category` vào mảng này
 
 ```python
 INSTALLED_APPS = [
@@ -308,18 +308,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'categories' #Khao báo app mới vào danh sách này
+    'category' #Khao báo app mới vào danh sách này
 ]
 ```
 
 
-Sau đó bạn chạy lên http://127.0.0.1:8000/categories/ bạn sẽ thấy được nội dung được render với template đã chỉ định.
+Sau đó bạn chạy lên http://127.0.0.1:8000/category/ bạn sẽ thấy được nội dung được render với template đã chỉ định.
 
 ![view](img/view-template-1.png)
 
 Khi tạo các trang web bạn dễ nhận thấy là chúng dùng chung phần header, footer. Để có thể tái sử dụng, tránh sự lặp lại về code chúng ta có thể dùng một `layout` chung cho các trang đó.
 
-Tạo `categories/templates/layout.html`
+Tạo `category/templates/layout.html`
 
 ```django
 <!DOCTYPE html>
@@ -336,7 +336,7 @@ Tạo `categories/templates/layout.html`
 </html>
 ```
 
-Khi đó file `categories/templates/categories_list.html` muốn sử dụng layout này thì sửa lại như sau:
+Khi đó file `category/templates/category_list.html` muốn sử dụng layout này thì sửa lại như sau:
 
 ```django
 {% extends "layout.html" %}
@@ -346,7 +346,7 @@ Khi đó file `categories/templates/categories_list.html` muốn sử dụng lay
 {% endblock %}
 
 {% block content %}
-   <p>My Category ID is {{ categories.id }}. My Category name is {{ categories.name }}.</p>
+   <p>My Category ID is {{ category.id }}. My Category name is {{ category.name }}.</p>
 {% endblock %}
 ```
 
