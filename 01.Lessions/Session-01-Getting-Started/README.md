@@ -4,10 +4,14 @@
 
 Django là một framework web mã nguồn mở được viết bằng Python. Django được phát triển bởi Django Software Foundation (DSF), một tổ chức phi lợi nhuận độc lập. Ra mắt phiên bản đầu tiên vào `7-2005` bởi `Lawrence Journal-World`
 
+![logo django](https://www.djangoproject.com/m/img/logos/django-logo-positive.png)
+
 Django được thiết kế để giúp các nhà phát triển tập trung vào viết các ứng dụng mà không cần phải xây dựng lại từ đầu
 
 
 Django được thiết kế theo mô hình MTV (Model-Template-Views). Mục tiêu chính của Django là dễ dàng tạo ra các trang web phức tạp, dựa trên cơ sở dữ liệu.
+
+![mvt](../Session-05-URLs-and-Views/img/mvt.png)
 
 Django có hệ thống đặt tên riêng cho tất cả các chức năng và thành phần. Django cũng có một bảng quản trị, được cho là dễ hơn so với Laravel hoặc Yii.
 
