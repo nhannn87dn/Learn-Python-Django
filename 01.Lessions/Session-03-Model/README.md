@@ -483,6 +483,28 @@ Dưới đây là một số tùy chọn Meta bạn có thể sử dụng trong 
 - `constraints`: Tùy chọn này cho phép bạn tạo các ràng buộc tùy chỉnh cho mô hình. Mỗi ràng buộc trong danh sách phải là một thể hiện của `django.db.models.CheckConstraint` hoặc `django.db.models.UniqueConstraint`. Ví dụ: `constraints = [models.CheckConstraint(check=models.Q(age__gte=18), name="age_gte_18")]` sẽ tạo một ràng buộc kiểm tra để đảm bảo rằng `age` luôn lớn hơn hoặc bằng 18.
 
 
+Ví dụ:
+
+```python
+from django.db import models
+
+class Product(models.Model):
+    class Meta:
+        #Đặt tên table
+        db_table = 'products'
+        #Cấu hình sắp xếp mặc định
+        ordering = ['-id'] #dấu - trước tên trường là DESC
+        #Đánh chỉ mục index
+        indexes = [models.Index(fields=['product_name', 'price'])]
+        #Chống trùng lặp
+        unique_together = (("product_name", "category_id"),)
+        # Danh sách các constraints
+        constraints = [
+            models.CheckConstraint(check=models.Q(price__gte=0), name='ck_products_price'),
+            models.CheckConstraint(check=models.Q(discount__gte=0, discount__lte=70), name='ck_products_discount'),
+        ]
+```
+
 Lưu ý rằng tùy chọn Meta không phải là bắt buộc, và bạn chỉ nên sử dụng chúng khi bạn muốn thay đổi các giá trị mặc định.
 
 Xem thêm về Contraints: https://docs.djangoproject.com/en/5.0/ref/models/constraints/
