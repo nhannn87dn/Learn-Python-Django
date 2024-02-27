@@ -1,4 +1,6 @@
-# Session 03 - Databases and Model
+# Session 02 - Databases and Model
+
+Trong chương này chúng ta sẽ tìm hiểu về `M`, thành phần đầu tiên trong mô hình `MVT`
 
 ## 💛 Cấu hình kết nối Database
 
@@ -177,12 +179,6 @@ class Category(models.Model):
 
 Tài liệu để học cách tạo Model với các trường và kiểu dữ liệu:
 
-### 🔥 Field Options
-
-Là các tùy chọn của trường như: `Null`, `Not Null`, `Default`, `Unique`, `Primary Key`...
-
-Xem đầy đủ: https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-options
-
 ### 🔥 Field Types
 
 Để biết cách tạo trường kiểu chuỗi, kiểu boolean, kiểu date là gì ...
@@ -194,44 +190,63 @@ Xem đầy đủ: https://docs.djangoproject.com/en/5.0/ref/models/fields/#field
 Ví dụ
 
 ```python
-from django.db import models
 
-class Product(models.Model):
     # Định nghĩa khóa chính tự tăng. Nếu không được tạo tự động với tên id
     product_id = models.AutoField(primary_key=True)
     #product_name nvarchar(255) UNIQUE NOT NULL
     product_name = models.CharField(max_length=255, unique=True)
     # brand Có quan hệ với Model Brand
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL)
     # category Có quan hệ với Model Category
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     #model_year SMALLINT NOT NULL
     model_year = models.SmallIntegerField()
     #price DECIMAL(18,2) DEFAULT 0
-    price = models.DecimalField(max_digits=18, decimal_places=2, db_default=0)
-    #price DECIMAL(4,2) DEFAULT 0
-    discount = models.DecimalField(max_digits=4, decimal_places=2, db_default=0)
+    price = models.DecimalField(max_digits=18, decimal_places=2, default=0)
+  
+
     #description nvarchar(max) NULL
     description = models.TextField(null=True)
     #created_at timestamp 
     created_at = models.DateTimeField(auto_now_add=True)
     #created_at timestamp  
     updated_at = models.DateTimeField(auto_now=True)
-    # isActived BOOLEAN NOT NULL DEFAULT FALSE
-    isActived = models.BooleanField(db_default=False)
+    # is_active BOOLEAN NOT NULL DEFAULT True
+    is_active = models.BooleanField(default=True)
 
-    class Meta:
-        db_table = 'products'
-        # Danh sách các constraints
-        constraints = [
-            models.CheckConstraint(check=models.Q(price__gte=0), name='ck_products_price'),
-            models.CheckConstraint(check=models.Q(discount__gte=0, discount__lte=70), name='ck_products_discount'),
-        ]
+    #Trường Upload hình ảnh
+    #Cần cài thư viện Pillow
+    thumbnail = models.ImageField(upload_to='upload/%Y/%m')
+
+    #Email
+    email = models.EmailField(max_length=255, unique=True)
+
+    #Trường upload file
+    ## file will be saved to MEDIA_ROOT/uploads/2015/01/30
+    # Cần cấu hình biến MEDIA_ROOT
+    upload = models.FileField(upload_to="uploads/%Y/%m/%d/")
+
+    #Field chọn từ một danh sách định sẵn
+    GENDER_CHOICES = {
+        1: 'Female',
+        2: 'Male',
+        3: 'LGBT'
+    }
+    gender = models.PositiveSmallIntegerField(default=1, choices=GENDER_CHOICES)
 ```
 
 Xem thêm về Model: https://docs.djangoproject.com/en/5.0/ref/models/
 
+---
 
+### 🔥 Field Options
+
+Là các tùy chọn của trường như: `Null`, `Not Null`, `Default`, `Unique`, `Primary Key`...
+
+Xem đầy đủ: https://docs.djangoproject.com/en/5.0/ref/models/fields/#field-options
+
+
+---
 
 ## 💛 Migration
 
@@ -464,7 +479,7 @@ class Staff(models.Model):
     last_name = models.CharField(max_length=50,null=False,blank=False)
     phone = model.CharField(max_length=20,unique=True)
     email = model.CharField(max_length=150,unique=True)
-    active = model.BooleanField(db_default=1)
+    active = model.BooleanField(default=1)
 
 ```
 
@@ -511,7 +526,7 @@ class Staff(PersonAbstract):
         db_table = 'staffs'
     
     #Giữ lại các trường riêng 
-    active = model.BooleanField(db_default=1)
+    active = model.BooleanField(default=1)
 
 ```
 
