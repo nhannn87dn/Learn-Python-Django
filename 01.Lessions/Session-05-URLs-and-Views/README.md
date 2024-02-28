@@ -158,6 +158,7 @@ from django.template.response import TemplateResponse
 
 #Hiển thị danh sách sản phẩm
 def productList(request):
+    context = {}
     # Create a response
     response = TemplateResponse(request, "product_list.html", context)
     # Return the response
@@ -165,6 +166,7 @@ def productList(request):
 
 #Hiển thị chi tiết sản phẩm
 def productDetail(request, id):
+    context = {}
     # Create a response
     response = TemplateResponse(request, "product_detail.html",context)
     
@@ -182,6 +184,27 @@ Trong đó 2 file `product_list.html` và `product_detail.html` được tại r
 ```
 
 Chúng ta sẽ tìm hiểu chi tiết hơn trong phần Template
+
+
+#### 🔹 Shorcut Render
+
+```python
+from django.shortcuts import render
+from .models import Product
+
+#Hiển thị danh sách sản phẩm
+def productList(request):
+    context = {}
+    # Create a response
+    response = TemplateResponse(request, "product_list.html", context)
+    # Return the response
+    return response
+
+# nếu không tìm thấy sản phẩm thì trả về page 404
+def detail(request, id):
+    product = get_object_or_404(Product, pk=id)
+    return render(request, "product_detail.html", {"product": product})
+```
 
 #### 🔹 JsonResponse
 
@@ -586,7 +609,7 @@ Ví dụ: bạn sửa file `product/view.py`
 
 ```python
 from django.template.response import TemplateResponse
-from .model import Product
+from .models import Product
 
 #Hiển thị danh sách sản phẩm
 def productList(request):
@@ -645,6 +668,22 @@ Tạo tiếp file `product/templates/product_list.html`
 </html>
 ```
 
+Hoặc bạn có thể sử dụng được sinh ra tự động 
+
+```django
+<li>
+    <a href="{% url 'product-detail' p.id %}">#{{ p.id }} - {{ p.product_name }} - {{ p.price }}</a>
+</li>
+```
+
+Hoặc nếu bạn có cấu hình `app_name` và `namespace`
+
+```django
+<li>
+    <a href="{% url 'product:product-detail' p.id %}">#{{ p.id }} - {{ p.product_name }} - {{ p.price }}</a>
+</li>
+```
+
 Trong đó `product_list.html` là tên của Template. Không nên đặt tên trùng nhau giữa các `app` để gây ra sử dụng nhầm.
 
 Tạo tiếp file `product/templates/product_detail.html`
@@ -668,7 +707,7 @@ Tạo tiếp file `product/templates/product_detail.html`
 
 Bước 3: Gắn `view` cho url
 
-Sửa file `product/url.py`
+Sửa file `product/urls.py`
 
 ```python
 from django.urls import path
@@ -679,6 +718,10 @@ from . import views
 # Tham số đầu tiên trong hàm path
 # chính là URL tính tại vị trí của app product
 # Tương đương với http://127.0.0.1:8000/products/
+
+#Set app_name để sử dụng namespace
+app_name = "product"
+
 urlpatterns = [
     path("", views.productList, name="product-list"),
     path("<int:id>", views.productDetail, name="product-detail"),
@@ -690,7 +733,13 @@ urlpatterns = [
 
 Sau đó bạn chạy lên http://127.0.0.1:8000/products/ bạn sẽ thấy được nội dung được render với template đã chỉ định.
 
-![view](img/view-template-1.png)
+![product list](img/view-template-1.png)
+
+Click vào chi tiết 1 sản phẩm, bạn sẽ chuyển sang trang chi tiết sản phẩm trông như sau
+
+![product detail](img/view-template-2.png)
+
+### 🔥 Layout
 
 Khi tạo các trang web bạn dễ nhận thấy là chúng dùng chung phần header, footer. Để có thể tái sử dụng, tránh sự lặp lại về code chúng ta có thể dùng một `layout` chung cho các trang đó.
 
