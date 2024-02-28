@@ -787,37 +787,15 @@ Giải thích:
 - block title: Bạn có thể hiểu nó như một mảng ghép logo, nó sẽ được gắn đúng vào vị trí `block title ` đã khai báo trong  template `layout.html`
 
 
-### 🔥 Cấu hình Template trong Django
+### 🔥 Thêm tài nguyên tĩnh vào App
+
+Tài nguyên tĩnh bao gồm: Hình ảnh, Css, Js, Fonts, Video ...
 
 
-Cấu hình `TEMPLATES` trong Django quy định cách Django xử lý các template.
 
-Trong thư mục gốc dự án file `settings.py`
+Chi tiết: 
 
-
-```python
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            # ... some options here ...
-        },
-    },
-]
-```
-
-
-Trong đó:
-
-- `BACKEND`: Đây là đường dẫn đầy đủ của lớp backend template mà Django sẽ sử dụng. Trong trường hợp này, `"django.template.backends.django.DjangoTemplates"` nghĩa là Django sẽ sử dụng backend template mặc định của nó.
-
-- `DIRS`: Đây là một danh sách các thư mục mà Django sẽ tìm kiếm templates. Trong trường hợp này, danh sách này rỗng, nghĩa là Django sẽ không tìm kiếm templates trong bất kỳ thư mục nào ngoài các thư mục templates của các app.
-
-- `APP_DIRS`: Nếu giá trị này là `True`, Django sẽ tìm kiếm templates trong thư mục `templates` của mỗi app trong `INSTALLED_APPS`.
-
-- `OPTIONS`: Đây là một dictionary chứa các tùy chọn cấu hình cho backend template. Các tùy chọn cụ thể phụ thuộc vào backend template mà bạn đang sử dụng.
-
-Lưu ý: Trong một dự án Django thực tế, bạn có thể cần phải tùy chỉnh các giá trị này để phù hợp với yêu cầu của dự án.
+- https://docs.djangoproject.com/en/5.0/howto/static-files/
+- https://docs.djangoproject.com/en/5.0/howto/static-files/deployment/
+- https://docs.djangoproject.com/en/5.0/ref/contrib/staticfiles/
 

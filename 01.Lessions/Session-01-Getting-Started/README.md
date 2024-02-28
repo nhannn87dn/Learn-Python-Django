@@ -20,7 +20,7 @@ Django có thể được dùng để xây dựng hầu hết các loại websit
 
 ## 💛 MVT Patten trong Django
 
-![mvt](img/mvt.png)
+![mvt](../Session-05-URLs-and-Views/img/mvt.png)
 
 Django dựa trên kiến trúc MVT (Model-View-Template). MVT là một mô hình thiết kế phần mềm để phát triển một ứng dụng web. Cấu trúc MVT bao gồm ba phần sau:
 
@@ -363,3 +363,6 @@ Kết quả
 
 ![web](img/screenshot_django2.png)
 
+## 💛 Tìm hiểu Cấu hình  `settings.py`
+
+Chi tiết: https://docs.djangoproject.com/en/5.0/ref/settings/
