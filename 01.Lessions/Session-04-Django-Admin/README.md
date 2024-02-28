@@ -289,6 +289,43 @@ Trong các views
 <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}">
 ```
 
+Ví dụ bạn muốn hiển thị hình ảnh thumbnail đã up load ở Form Edit sản phẩm
+
+![hình ảnh](img/admin08.png)
+
+bạn thêm đoạn này vào ModelAdmin
+
+```python
+from django.utils.html import mark_safe
+
+class ProductAdmin(models.ModelAdmin):
+
+    #Hiển thị hình ảnh Thumbnail đã upload
+    readonly_fields = ['thumbnail_preview',]
+
+    # Tùy chỉnh hiển thị thêm hình ảnh đã upload
+    def thumbnail_preview(self, obj):
+        return mark_safe('''
+                     <img height='120' src="{img_url}" alt="{img_alt}" />
+                     '''.format(img_url=obj.thumbnail.url, img_alt=obj.product_name))
+    thumbnail_preview.short_description = 'Thumbnail Preview'
+
+```
+
+
+### 🔥 Phân trang danh sách
+
+Bạn thêm vào ModelAdmin hàm này để ghi đè lại phương thức phân trang
+
+```python
+class ProductAdmin(admin.ModelAdmin):
+    #Tùy biến phân trang cho lưới danh sách
+    def get_paginator(self, request, queryset, per_page, orphans=0, allow_empty_first_page=True):
+         # Tùy chỉnh số lượng mục trên mỗi trang
+        per_page = 15
+        return super().get_paginator(request, queryset, per_page, orphans, allow_empty_first_page)
+
+```
 
 ## 💛 Admin actions
 
@@ -310,13 +347,26 @@ from django.contrib import admin
 from .models import Product
 
 #Định nghĩa hàm xử lý action
+# Thêm sản phẩm vào giỏ rác
 @admin.action(description="Delete this item to recyclebin")
 def soft_delete(modeladmin, request, queryset):
     queryset.update(is_delete=True)
 
-class ArticleAdmin(admin.ModelAdmin):
+
+#Định nghĩa hàm xử lý action
+# Khôi phục sản phẩm từ giỏ rác
+@admin.action(description="Restore this item to recyclebin")
+def restore_recyclebin(modeladmin, request, queryset):
+    queryset.update(is_delete=False)
+
+
+class ProductAdmin(admin.ModelAdmin):
     #Đăng ký hàm vào biến actions
-    actions = [soft_delete]
+    actions = [soft_delete,restore_recyclebin]
 ```
 
 ## 💛 Admin documentation generator
+
+Là cách tạo ghi chú theo chuẩn của Django để nó tự động tạo ra document gợi ý code.
+
+Xem chi tiết: https://docs.djangoproject.com/en/5.0/ref/contrib/admin/admindocs/

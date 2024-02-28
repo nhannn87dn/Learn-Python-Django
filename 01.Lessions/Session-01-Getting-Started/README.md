@@ -11,13 +11,24 @@ Django được thiết kế để giúp các nhà phát triển tập trung và
 
 Django được thiết kế theo mô hình MTV (Model-Template-Views). Mục tiêu chính của Django là dễ dàng tạo ra các trang web phức tạp, dựa trên cơ sở dữ liệu.
 
-![mvt](../Session-05-URLs-and-Views/img/mvt.png)
 
 Django có hệ thống đặt tên riêng cho tất cả các chức năng và thành phần. Django cũng có một bảng quản trị, được cho là dễ hơn so với Laravel hoặc Yii.
 
 Django có một trong những hệ thống bảo mật tiện lợi và tốt nhất hiện nay, nó giúp các lập trình viên tránh các vấn đề bảo mật phổ biến như: Clickjacking, Script chéo trang, Chèn SQL.
 
 Django có thể được dùng để xây dựng hầu hết các loại website, từ hệ thống quản lý nội dung, cho đến các trang mạng xã hội hay web tin tức.
+
+## 💛 MVT Patten trong Django
+
+![mvt](img/mvt.png)
+
+Django dựa trên kiến trúc MVT (Model-View-Template). MVT là một mô hình thiết kế phần mềm để phát triển một ứng dụng web. Cấu trúc MVT bao gồm ba phần sau:
+
+1. **Model**: Model sẽ hoạt động như giao diện của dữ liệu của bạn. Nó chịu trách nhiệm duy trì dữ liệu. Đây là cấu trúc dữ liệu logic đằng sau toàn bộ ứng dụng và được biểu diễn bởi một cơ sở dữ liệu (thông thường là cơ sở dữ liệu quan hệ như MySql, Postgres).
+2. **View**: View là giao diện người dùng - những gì bạn thấy trong trình duyệt của mình khi bạn render một trang web. Nó được biểu diễn bởi các tệp HTML/CSS/Javascript và Jinja.
+3. **Template**: Một template bao gồm các phần tĩnh của đầu ra HTML mong muốn cũng như một số cú pháp đặc biệt mô tả cách nội dung động sẽ được chèn.
+
+Mặc dù Django tuân theo mô hình MVC nhưng lại duy trì các quy ước riêng của mình. Vì vậy, việc kiểm soát được xử lý bởi chính framework. Không có bộ điều khiển riêng biệt và toàn bộ ứng dụng dựa trên Model, View và Template. Đó là lý do tại sao nó được gọi là ứng dụng MVT.
 
 
 ## 💛Yêu cầu cài đặt Django framework

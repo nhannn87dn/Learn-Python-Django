@@ -1,16 +1,5 @@
 # Session 02 - URLs and views
 
-## 💛 MVT Patten trong Django
-
-![mvt](img/mvt.png)
-
-Django dựa trên kiến trúc MVT (Model-View-Template). MVT là một mô hình thiết kế phần mềm để phát triển một ứng dụng web. Cấu trúc MVT bao gồm ba phần sau:
-
-1. **Model**: Model sẽ hoạt động như giao diện của dữ liệu của bạn. Nó chịu trách nhiệm duy trì dữ liệu. Đây là cấu trúc dữ liệu logic đằng sau toàn bộ ứng dụng và được biểu diễn bởi một cơ sở dữ liệu (thông thường là cơ sở dữ liệu quan hệ như MySql, Postgres).
-2. **View**: View là giao diện người dùng - những gì bạn thấy trong trình duyệt của mình khi bạn render một trang web. Nó được biểu diễn bởi các tệp HTML/CSS/Javascript và Jinja.
-3. **Template**: Một template bao gồm các phần tĩnh của đầu ra HTML mong muốn cũng như một số cú pháp đặc biệt mô tả cách nội dung động sẽ được chèn.
-
-Mặc dù Django tuân theo mô hình MVC nhưng lại duy trì các quy ước riêng của mình. Vì vậy, việc kiểm soát được xử lý bởi chính framework. Không có bộ điều khiển riêng biệt và toàn bộ ứng dụng dựa trên Model, View và Template. Đó là lý do tại sao nó được gọi là ứng dụng MVT.
 
 
 ## 💛 Tìm hiểu về View trong Django
@@ -25,25 +14,20 @@ Theo cách triển khai của Django, view sẽ thể hiện dữ liệu trả v
 
 Cùng tìm hiểu `View` qua một ví dụ
 
-Tạo một app mới tên là `category`
+Bạn sửa lại file `product/view.py` thành như sau
 
-```bash
-# Windows
-py manage.py startapp category
-# MacOS, Ubuntu
-$ python manage.py startapp category
-```
-
-Bạn sửa lại file `category/view.py` thành như sau
 
 ```python
 from django.http import HttpResponse
 
-#URL: localhost:8000/category
-# Hàm này hiển thị danh sách các danh mục
-# Đặt tên hàm là index để hiểu là entry point như trong MVC
-def index(request):
+def productList(request):
     html = '<html><body><h1>Categories List</h1></body></html>';
+    # Response lại cho client chuỗi HTML
+    # status=200 là trạng thái thành công mặc định
+    return HttpResponse(html, status=200)
+
+def productDetail(request, id):
+    html = '<html><body><h1>Detail Product</h1></body></html>';
     # Response lại cho client chuỗi HTML
     # status=200 là trạng thái thành công mặc định
     return HttpResponse(html, status=200)
@@ -54,9 +38,18 @@ Bạn có thể hiểu hàm trên xử lý logic để trả về kết quả ch
 - Đầu vào là request
 - Đầu ra là HttpResponse
 
+Câu hỏi đặt ra là: Làm sao chúng ta có thể xem được view này ? 
+
+Hay nói dễ hiểu: Là làm sao để xem được đoạn code trên hiển thị ra như thế  nào ?
+
+==> Chúng ta cần đến một khái niệm gọi là `URL`. Trong một số framework khác nó còn biết đến với một cái tên là `Route` (Định tuyến)
+
 ---
 
+
 ## 💛 Tìm hiểu về Request, Response
+
+Trước khi đi vào tìm hiểu `URLs` chúng ta cần làm rõ khái niệm `Request, Response`
 
 ![request](img/HTTP-request-response-pattern.png)
 
@@ -84,6 +77,43 @@ Request mang theo một trong các methods: GET, POST, PUT, DELETE. Mặc địn
 
 Dựa vào method này `view.py` sẽ xử lý các logic tương ứng sau đó trả lại kết quả cho client thông qua response.
 
+Trong Django, `HttpRequest` là một đối tượng được tạo ra cho mỗi yêu cầu HTTP nhận được bởi ứng dụng của bạn. Dưới đây là một số thuộc tính và phương thức quan trọng của `HttpRequest`:
+
+1. **Thuộc tính `method`**: Đây là một chuỗi biểu diễn phương thức HTTP của yêu cầu (ví dụ: 'GET', 'POST').
+
+2. **Thuộc tính `path`**: Đây là một chuỗi biểu diễn đường dẫn URL của yêu cầu, không bao gồm tên miền.
+
+3. **Thuộc tính `GET`**: Đây là một đối tượng chứa tất cả các tham số GET của yêu cầu.
+
+4. **Thuộc tính `POST`**: Đây là một đối tượng chứa tất cả các tham số POST của yêu cầu.
+
+5. **Thuộc tính `COOKIES`**: Đây là một đối tượng chứa tất cả các cookie được gửi cùng với yêu cầu.
+
+6. **Phương thức `is_ajax()`**: Phương thức này trả về `True` nếu yêu cầu được tạo ra bởi một hàm JavaScript `XMLHttpRequest`.
+
+7. **Phương thức `is_secure()`**: Phương thức này trả về `True` nếu yêu cầu được thực hiện qua HTTPS.
+
+Dưới đây là một ví dụ về cách sử dụng một số thuộc tính và phương thức của `HttpRequest`:
+
+```python
+def some_view(request):
+    # Lấy phương thức HTTP
+    method = request.method
+
+    # Lấy đường dẫn URL
+    path = request.path
+
+    # Lấy tham số GET 'param'
+    param = request.GET.get('param', '')
+
+    # Kiểm tra xem yêu cầu có phải là AJAX hay không
+    is_ajax = request.is_ajax()
+
+    # Kiểm tra xem yêu cầu có phải là HTTPS hay không
+    is_secure = request.is_secure()
+
+    ...
+```
 
 ### 🔥 Response
 
@@ -92,7 +122,330 @@ Dựa vào method này `view.py` sẽ xử lý các logic tương ứng sau đó
 - https://docs.djangoproject.com/en/5.0/ref/request-response/#django.http.HttpResponse
 
 
+#### 🔹HttpResponse
+
+Ví dụ 1: Trả lại một chuỗi. Có thể là html.
+
+```python
+from django.http import HttpResponse
+
+#Hiển thị danh sách sản phẩm
+def productList(request):
+    # Create a response
+    response = HttpResponse(content="Here's the text of the web page.", status_code=200)
+    #Nối thêm vào content trả về
+    response.write("<p>Here's the text of the web page.</p>")
+    # Return the response
+    return response
+```
+
+#### 🔹 SimpleTemplateResponse
+
+Là một lớp cơ bản giúp bạn `response` lại cho client một file view ở dạng tập tin `.html`
+
+Xem chi tiết: https://docs.djangoproject.com/en/5.0/ref/template-response/
+
+#### 🔹 TemplateResponse
+
+Là lớp kế thừa từ `SimpleTemplateResponse` và mở  rộng tính năng hơn.
+
+Giúp bạn `response` lại client một `template` mạnh mẽ hơn.
+
+Ví dụ: bạn sửa file `product/view.py`
+
+```python
+from django.template.response import TemplateResponse
+
+#Hiển thị danh sách sản phẩm
+def productList(request):
+    # Create a response
+    response = TemplateResponse(request, "product_list.html", context)
+    # Return the response
+    return response
+
+#Hiển thị chi tiết sản phẩm
+def productDetail(request, id):
+    # Create a response
+    response = TemplateResponse(request, "product_detail.html",context)
+    
+    # Return the response
+    return response
+```
+
+Trong đó 2 file `product_list.html` và `product_detail.html` được tại ra tại đường dẫn `product/templates/`
+
+```html
+├── product
+    ├── templates
+    │   ├── product_list.html
+    │   └── product_detail.html
+```
+
+Chúng ta sẽ tìm hiểu chi tiết hơn trong phần Template
+
+#### 🔹 JsonResponse
+
+Ví dụ
+
+```python
+from django.http import JsonResponse
+
+def some_view(request):
+    data = {
+        'name': 'John',
+        'age': 30,
+        'city': 'New York'
+    }
+    return JsonResponse(data)
+```
+
+Chi tiết: https://docs.djangoproject.com/en/5.0/ref/request-response/#jsonresponse-objects
+
+#### 🔹 FileResponse
+
+`FileResponse` là một lớp trong Django giúp bạn gửi một tệp như một phản hồi HTTP. Điều này rất hữu ích khi bạn muốn cho phép người dùng tải xuống một tệp từ máy chủ của bạn.
+
+Dưới đây là một ví dụ về cách sử dụng `FileResponse` để gửi một tệp như một phản hồi HTTP:
+
+```python
+from django.http import FileResponse
+
+def some_view(request):
+    file_path = '/path/to/your/file'
+    response = FileResponse(open(file_path, 'rb'))
+    return response
+```
+
+Trong đoạn mã trên, `FileResponse` nhận một đối tượng file mở trong chế độ đọc nhị phân (`'rb'`) làm tham số và trả về một phản hồi HTTP với nội dung là nội dung của tệp. Khi bạn truy cập vào view `some_view`, trình duyệt sẽ tải xuống tệp tại `file_path`.
+
 ---
+
+## 💛 Tìm hiểu về URL trong Django
+
+Trong Django, URL đóng vai trò định tuyến phản hồi lại request của người dùng.
+
+Ví dụ: Khi bạn nhập vào URL là:
+
+- '/': Thì nó sẽ hiển thị trang chủ
+- '/products': Thì nó sẽ hiển thị trang danh mục sản phẩm
+- '/products/1': Thì nó sẽ hiển thị chi tiết 1 sản phẩm
+
+
+Tức là nó lấy phần `view` hiển thị tương ứng với phần `url` hiện tại mà `request` người dùng gửi lên.
+
+
+Dưới đây là một số thông tin cơ bản về URL trong Django:
+
+1. **URL Dispatcher**: Django sử dụng một hệ thống URL dispatcher để điều hướng các yêu cầu web đến view thích hợp dựa trên URL. Dispatcher sẽ so khớp URL của yêu cầu HTTP với một danh sách các mẫu URL mà bạn đã định nghĩa trước.
+
+2. **URLConf**: Trong Django, bạn định nghĩa các mẫu URL trong một tệp Python được gọi là URLConf, thường là tệp `urls.py`. Mỗi mẫu URL bao gồm một chuỗi mô tả mẫu và một view sẽ được gọi khi mẫu được khớp.
+
+3. **View**: Khi một mẫu URL được khớp, Django sẽ gọi view tương ứng với một số thông tin về yêu cầu, như các tham số được trích xuất từ URL. View sau đó sẽ xử lý yêu cầu và trả về một HTTP response.
+
+4. **Namespaces URL**: Django hỗ trợ namespaces URL, cho phép bạn tổ chức tốt hơn các URL của ứng dụng. Điều này rất hữu ích khi bạn có nhiều ứng dụng Django và muốn tránh xung đột tên URL.
+
+5. **Reverse URL Matching**: Django cung cấp một hệ thống reverse URL matching, cho phép bạn xây dựng URL dựa trên tên của chúng. Điều này giúp mã của bạn dễ bảo dưỡng hơn, vì bạn không cần cập nhật URL ở nhiều nơi mỗi khi bạn thay đổi mẫu URL.
+
+Toàn bộ cấu hình URL của Django được đặt tại file `bikestore/urls.py`.
+
+```python
+#...Phần import thư viện
+
+#Biến này chưa danh sách các URLs có trong project
+urlpatterns = [
+    path('', include("home.urls")),
+    path('admin/', admin.site.urls),
+    
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+Ngoài ra, trong mỗi app, chúng CÓ THỂ có từng file `url.py` để cấu hình `segment` riêng cho từng app.
+
+### 🔥 Định nghĩa URL mới URLconf
+
+Bước 1: Định nghĩa URL cho app
+
+Mặc định khi tạo app file `urls.py` không được tạo sẵn. Bạn cần tạo ra file này cho mỗi app.
+
+File `product/urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+#Biến này cấu hình danh sách các urls nội bộ của app
+urlpatterns = [
+    #ex /products/
+    path('', views.productList, name='product_list'),
+    #ex /products/1/
+    path('<int:id>/', views.productDetail, name='product_detail'),
+]
+```
+
+
+Bước 2: Khai báo URL của app với Django
+
+Bạn sửa file `bikestore/urls.py` bổ sung vào biến `urlpatterns` như sau:
+
+```python
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include("home.urls")),
+    path('admin/', admin.site.urls),
+    #Thêm dòng này vào
+    #Nạp file urls ở trong thư mục product
+    path('products/', include('product.urls')),
+    
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+Khi bạn cấu hình 2 bước trên thì đường dẫn URL được nối thành.
+
+```python
+#URL này gọi URL tĩnh
+products/ + Kí tự rỗng = products/
+#URL với trường id động, chỉ chấp nhận kiểu int
+products/ + <int:id>/ = products/<int:id>/
+'''
+products/1 --> Khớp
+products/anc --> Không khớp
+'''
+```
+
+Bạn truy cập đến URL: `http://127.0.0.1:8000/products`
+
+Bạn sẽ thấy nội dung của phần `view` được hiện thị tương ứng với `url` đã khai báo.
+
+
+### 🔥 URL dispatcher
+
+Là cách mà chúng ta định nghĩa URL chính xác theo mong muốn để hiển thị `view`.
+
+Xem thêm: https://docs.djangoproject.com/en/5.0/topics/http/urls/#example
+
+Ví dụ: URL tĩnh
+
+```python
+"lien-he"
+"hoi-dap"
+"gioi-thieu"
+```
+
+Mỗi `URL` trên tương tứng với một `view` cụ thể
+
+Khi đó bạn sẽ khai báo URL
+
+```python
+ path('lien-he/', include("contact.urls")),
+ path('hoi-dap/', include("faq.urls")),
+ path('gioi-thieu/', include("company.urls")),
+```
+
+Ví dụ: URL động
+
+```python
+"users/ngocnhan"
+"users/vantai"
+"users/quoctuan"
+"users/ngocnhan"
+#Hoặc
+"products/1"
+"products/2"
+"products/3"
+"products/3"
+#Hoặc
+"tin-tuc/apple-vua-ra-mat-iphone-15-pro-max"
+"tin-tuc/vai-tro-cua-ai-trong-doi-song"
+#Hoặc
+"photos/2003"
+"photos/2004"
+"photos/2005"
+```
+
+Khi đó bạn sẽ khai báo trong `urls.py` các app tương ứng 
+
+
+```python
+path('<str:username>', include("user.urls"))
+path('<int:id>', include("product.urls"))
+path('<slug:slug>', include("post.urls"))
+```
+
+Hoặc sử dụng `regular expressions`
+
+```python
+from django.urls import path, re_path
+
+re_path(r"^(?P<year>[0-9]{4})/$", include("photo.urls"))
+```
+Xem thêm: https://docs.djangoproject.com/en/5.0/topics/http/urls/#using-regular-expressions
+
+
+### 🔥 Path converters
+
+Trong django có các loại:
+- **str**: khớp với tất cả kí tự, ngoài trị kí tự rỗng và "/"
+- **int**: khớp với số nguyên dương 0-9, trả về kiểu số.
+- **slug**: khớp với tất cả kí tự và số ASCII, và dấu gạch nối -, gạch dưới _. Ví dụ: building-your-1st-django-site
+- **uuid**: khớp với định dạng UUID. Ví dụ: 075194d3-6885-417e-a8a8-6c931e272f00
+- **path**: khớp với tất cả kí tự không rỗng, bao gồm cả "/"
+
+Ngoài ra bạn có thể tự đăng ký cho mình một `Path converter` riêng.
+
+Chi tiết xem tại: https://docs.djangoproject.com/en/5.0/topics/http/urls/#registering-custom-path-converters
+
+
+### 🔥 URL NameSpaces
+
+
+Trong Django, URL namespaces là một tính năng mạnh mẽ giúp bạn tổ chức và modularize cấu hình URL của mình. URL namespaces cho phép bạn nhóm các mẫu URL liên quan dưới một tiền tố chung, giúp quản lý và tham chiếu chúng dễ dàng hơn.
+
+Dưới đây là một số điểm chính về URL namespaces trong Django:
+
+1. **Phân biệt các URL**: URL namespaces giúp bạn phân biệt giữa các URL có cùng đường dẫn trong các phần khác nhau của ứng dụng của bạn.
+
+2. **Bao gồm cấu hình URL từ các module khác**: URL namespaces cho phép bạn bao gồm các cấu hình URL từ các module khác.
+
+3. **Sử dụng trong các ứng dụng của bên thứ ba**: Đối với các ứng dụng của bên thứ ba, việc sử dụng URL namespaces là một thực hành tốt.
+
+4. **Triển khai nhiều phiên bản của một ứng dụng**: Nếu bạn triển khai nhiều phiên bản của một ứng dụng, URL namespaces cũng cho phép bạn đảo ngược các URL.
+
+Để sử dụng URL namespaces, bạn cần thêm một biến `app_name` trong tệp `urls.py` của ứng dụng và sử dụng tham số `namespace` khi bao gồm các mẫu URL.
+
+Ví dụ:
+
+`product/urls.py`
+
+```python
+from django.urls import path
+
+from . import views
+
+app_name = "product"
+urlpatterns = [
+    path("", views.IndexView.as_view(), name="index"),
+    path("<int:pk>/", views.DetailView.as_view(), name="detail"),
+    ...,
+]
+```
+
+`bikestore/urls.py`
+
+```python
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include("home.urls")),
+    path('admin/', admin.site.urls),
+    path('products/', include('product.urls', namespace="product-list")),
+    
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+```
+
+Đọc chi tiết: https://docs.djangoproject.com/en/5.0/topics/http/urls/#naming-url-patterns
+
 
 ## 💛 Tìm hiểu về Template trong Django
 
@@ -229,34 +582,47 @@ Comment line 3
 
 Bước 1: Cấu hình sử dụng `template` trong view.py
 
+Ví dụ: bạn sửa file `product/view.py`
+
 ```python
-from django.shortcuts import render
-from django.http import HttpResponse
-#Import thêm module django.template
-from django.template import loader
+from django.template.response import TemplateResponse
+from .model import Product
 
-
-#URL: localhost:8000/category
-# Hàm này hiển thị danh sách các danh mục
-def categoryList(request):
-    
-    template = loader.get_template('category_list.html')
-    # Tạo một context chứa các biến muốn sử dụng trong template
+#Hiển thị danh sách sản phẩm
+def productList(request):
+    #Lấy 20 sản phẩm đầu tiên
+    top_product_list = Product.objects.values()[:20]
+    #Truyền các biến xuống template
     context = {
-        'category': {
-            'id': 1, 
-            'name': 'Mobile'
-        },
+        "products": top_product_list,
     }
-    # có thể dùng HttpResponse
-    return HttpResponse(template.render(context, request))
+    # Create a response
+    response = TemplateResponse(request, "product_list.html", context)
+    
+    # Return the response
+    return response
+
+#Hiển thị chi tiết sản phẩm
+def productDetail(request, id):
+    #Lấy thông tin sản phẩm có id
+    product = Product.objects.get(pk=1)
+    #Truyền các biến xuống template
+    context = {
+        "product": product,
+    }
+    # Create a response
+    response = TemplateResponse(request, "product_detail.html",context)
+    
+    # Return the response
+    return response
 ```
+
 
 Bước 2: Tạo `template` cho view
 
-Trong thư mục `category/templates`
+Trong thư mục `product/templates`
 
-Tạo tiếp file `category/templates/category_list.html`
+Tạo tiếp file `product/templates/product_list.html`
 
 ```django
 <!DOCTYPE html>
@@ -264,19 +630,45 @@ Tạo tiếp file `category/templates/category_list.html`
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories</title>
+    <title>Products</title>
 </head>
 <body>
-    <p>My Category ID is {{ category.id }}. My Category name is {{ category.name }}.</p>
+    <h1>Product List</h1>
+    <ul>
+    {% for p in products %}
+        <li>
+        <a href="/products/{{ p.id }}">#{{ p.id }} - {{ p.product_name }} - {{ p.price }}</a>
+        </li>
+    {% endfor %}
+    </ul>
 </body>
 </html>
 ```
 
-Trong đó `category_list.html` là tên của Template. Không nên đặt tên trùng nhau giữa các `app` để gây ra sử dụng nhầm.
+Trong đó `product_list.html` là tên của Template. Không nên đặt tên trùng nhau giữa các `app` để gây ra sử dụng nhầm.
+
+Tạo tiếp file `product/templates/product_detail.html`
+
+
+```django
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+</head>
+<body>
+    <h1>Product Detail</h1>
+    <h2>{{ product.product_name }}</h2>
+    <p>Price: {{ product.price }}</p>
+</body>
+</html>
+```
 
 Bước 3: Gắn `view` cho url
 
-Sửa file `category/url.py`
+Sửa file `product/url.py`
 
 ```python
 from django.urls import path
@@ -285,41 +677,24 @@ from . import views
 
 # Khai báo url cho view ở bên file view
 # Tham số đầu tiên trong hàm path
-# chính là URL tính tại vị trí của app category
-# Tương đương với http://127.0.0.1:8000/category/
+# chính là URL tính tại vị trí của app product
+# Tương đương với http://127.0.0.1:8000/products/
 urlpatterns = [
-    path("", views.categoryList, name="category_list"),
+    path("", views.productList, name="product-list"),
+    path("<int:id>", views.productDetail, name="product-detail"),
 ]
-
-#category_list là tên bạn đặt cho view, không được trùng nhau trong cả project
-```
-
-Bước 4: Cấu hình `app category` vào Django
-
-Mở trong file `bikestore/settings.py`, tìm đến biến `INSTALLED_APPS`
-Bổ sung `category` vào mảng này
-
-```python
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'home',
-    'category' #Khao báo app mới vào danh sách này
-]
+# product-list là tên bạn đặt cho view, không được trùng nhau trong cả project
 ```
 
 
-Sau đó bạn chạy lên http://127.0.0.1:8000/category/ bạn sẽ thấy được nội dung được render với template đã chỉ định.
+
+Sau đó bạn chạy lên http://127.0.0.1:8000/products/ bạn sẽ thấy được nội dung được render với template đã chỉ định.
 
 ![view](img/view-template-1.png)
 
 Khi tạo các trang web bạn dễ nhận thấy là chúng dùng chung phần header, footer. Để có thể tái sử dụng, tránh sự lặp lại về code chúng ta có thể dùng một `layout` chung cho các trang đó.
 
-Tạo `category/templates/layout.html`
+Tạo `product/templates/layout.html`
 
 ```django
 <!DOCTYPE html>
@@ -336,17 +711,24 @@ Tạo `category/templates/layout.html`
 </html>
 ```
 
-Khi đó file `category/templates/category_list.html` muốn sử dụng layout này thì sửa lại như sau:
+Khi đó file `product/templates/product_list.html` muốn sử dụng layout này thì sửa lại như sau:
 
 ```django
 {% extends "layout.html" %}
 
 {% block title %}
- List of all Categories
+ List of all Products
 {% endblock %}
 
 {% block content %}
-   <p>My Category ID is {{ category.id }}. My Category name is {{ category.name }}.</p>
+   <h1>Product List</h1>
+    <ul>
+    {% for p in products %}
+        <li>
+        <a href="/products/{{ p.id }}">#{{ p.id }} - {{ p.product_name }} - {{ p.price }}</a>
+        </li>
+    {% endfor %}
+    </ul>
 {% endblock %}
 ```
 
