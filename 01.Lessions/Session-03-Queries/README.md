@@ -258,3 +258,6 @@ if last_book is not None:
     print(last_book.title)
 ```
 
+
+
+## 💛 Homeworks Guide

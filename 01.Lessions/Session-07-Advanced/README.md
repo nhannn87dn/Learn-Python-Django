@@ -1,13 +1,10 @@
 
-# Session-07-Advanceds 
+# Session 07 - Advanced
 
 - CKEditor
 - Cache
-- Cookie
-- Session
 - Send email
 - Sitemaps
-- Data validation
-- Messages framework
+
 
 Chi tiết: https://docs.djangoproject.com/en/5.0/#common-web-application-tools

@@ -791,11 +791,90 @@ Giải thích:
 
 Tài nguyên tĩnh bao gồm: Hình ảnh, Css, Js, Fonts, Video ...
 
-
-
 Chi tiết: 
 
 - https://docs.djangoproject.com/en/5.0/howto/static-files/
 - https://docs.djangoproject.com/en/5.0/howto/static-files/deployment/
 - https://docs.djangoproject.com/en/5.0/ref/contrib/staticfiles/
 
+#### Bước 1 - Cấu hình thư mục chứa file tĩnh cho App
+
+Cấu hình `STATIC_URL` ở file `settings.py`
+
+```python
+# settings.py
+#đây là đường dẫn tương đối đến thư mục static trong mỗi app
+STATIC_URL = '/static/'
+```
+
+#### Bước 2 - Cấu hình thư mục chứa tài nguyên Chung (Global) cho tất cả các App
+
+**Định nghĩa `STATICFILES_DIRS`**: `STATICFILES_DIRS` là một danh sách các thư mục mà Django sẽ tìm kiếm các static file. Đây là nơi bạn có thể đặt các static file toàn cục của bạn.
+
+```python
+# settings.py
+STATICFILES_DIRS = [
+    BASE_DIR / 'assets/static',
+    # Thêm thêm thư mục static toàn cục khác nếu cần
+]
+```
+#### Bước 3 - Cấu hình `STATIC_ROOT`
+
+Để cấu hình static files toàn cục (global) trong Django, bạn cần thực hiện các bước sau:
+
+`STATIC_ROOT` là thư mục mà `collectstatic` sẽ thu thập các static file vào đặt chung 1 chỗ, phân phối cho toàn Project.
+
+```python
+# settings.py
+#Bạn nên đặt nó thành một đường dẫn tuyệt đối
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+```
+
+#### Bước 4
+
+Trong chế độ phát triển bạn cần cấu hình thêm
+
+```python
+#urls.py
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('', include("home.urls")),
+    path('admin/', admin.site.urls),
+    path('products/', include('product.urls')),
+    path('api/', include('api.urls')),
+] 
+
+#Thêm đoạn này vào
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+```
+
+#### Bước 5 - Collect Static Files
+
+Chạy lệnh
+
+```bash
+py manage.py collectstatic
+```
+
+Sau mỗi lần thay đổi nội dung các  static files, để nó đưa hết vào thư mục `static` tài nguyên chung.
+
+#### Bước 6 -  Sử dụng
+
+Khi đó trong các template bạn dùng
+
+```django
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/global.css' %}">
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
+<img src="{% static 'images/example.jpg' %}" alt="My image">
+<script src="{% static 'js/cart.js' %}"></script>
+```
+
+
+## 💛 Homeworks Guide

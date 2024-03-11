@@ -229,18 +229,30 @@ Bước 2: Cài thư viện Pillow vào môi trường ảo nếu chưa cài
 py -m pip install Pillow
 ```
 
-Bước 3: Cấu hình MEDIA_ROOT
+
+Bước 3: Cấu hình MEDIA_URL
+
+Đây là biến cấu hình URL truy cập đến tập tin trong các View.
+
+```python
+#đường dẫn tương đối đến thư mục uploads
+MEDIA_URL = '/media/uploads/'
+```
+
+Bước 4: Cấu hình MEDIA_ROOT
 
 `MEDIA_ROOT` là cấu hình đường dẫn tuyệt đối cho các tập tin tải lên bởi người dùng trong Django.
 
-Tất cả các tệp tin tải lên dự kiến sẽ lưu hết vào `bikestore/static/uploads/`
+Tất cả các tệp tin tải lên dự kiến sẽ lưu hết vào `media/uploads/`
 
 Và tùy vào mỗi app, bạn có nhu cấu phân loại ra thành các thư mục con nữa thì bạn cấu hình tiếp trong tùy chọn `upload_to` khi định nghĩa file `ImageField`
 
 Sửa lại file `settings.py` thêm biến `MEDIA_ROOT` gần biến `STATIC_URL`
 
+
 ```python
-MEDIA_ROOT = os.path.join(BASE_DIR, 'bikestore/static/uploads/')
+#đường dẫn tuyệt đối đến thư mục uploads
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/uploads/')
 ```
 
 Khi đó URL tuyệt đối của một tệp tin sẽ là
@@ -251,13 +263,6 @@ MEDIA_ROOT + upload_to
 
 Chúng ta sẽ tìm hiểu các để re-size kích thước và giới hạn dung lượng tệp tin tải lên trong bài học sau.
 
-Bước 4: Cấu hình MEDIA_URL
-
-Đây là biến cấu hình URL truy cập đến tập tin trong các View.
-
-```python
-MEDIA_URL = '/bikestore/static/uploads/'
-```
 
 Bước 5: Khai báo URL static
 
@@ -268,8 +273,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # các URL khác...
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+# Thêm dòng này vào
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 ```
 
 Bước 5: Sử dụng URL
@@ -370,3 +378,5 @@ class ProductAdmin(admin.ModelAdmin):
 Là cách tạo ghi chú theo chuẩn của Django để nó tự động tạo ra document gợi ý code.
 
 Xem chi tiết: https://docs.djangoproject.com/en/5.0/ref/contrib/admin/admindocs/
+
+## 💛 Homeworks Guide
