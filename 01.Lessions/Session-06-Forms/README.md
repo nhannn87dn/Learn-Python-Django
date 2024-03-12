@@ -183,6 +183,8 @@ class MyForm(forms.Form):
 
 ```
 
+Chi tiết xem: https://docs.djangoproject.com/en/5.0/ref/validators/
+
 ### 🔥 Validators dựng sẵn
 
 Dưới đây là một số **Validators** quan trọng trong **Django**:
@@ -297,10 +299,153 @@ Kết luận: Qua đó bạn có thể tự tạo cho mình các cơ chế xử 
 
 ### 🔥 Session
 
-### 🔥 Cookie
+#### Session là gì ?
+
+- Session đại diện cho một phiên làm việc giữa máy chủ và người dùng, Session lưu trữ thông tin, trạng thái của của người dùng trong suốt quá trình tương tác với ứng dụng web.
+- Session sẽ mất đi khi tắt trình duyệt.
+- Trình duyệt sẽ gửi thông tin session trong mỗi request đến server
+
+
+#### Sử dụng Session trong Django
+
+Để sử dụng session trong Django, bạn cần thêm `django.contrib.sessions.middleware.SessionMiddleware` vào danh sách middleware trong tệp settings.py.
+
+Mặc định, Django lưu trữ session trong cơ sở dữ liệu (sử dụng model django.contrib.sessions.models.Session). Bạn có thể cấu hình để lưu trữ session data ở nơi khác như hệ thống tệp hoặc cache.
+
+
+
+```python
+#Khởi tạo session hoặc gán giá trị cho session
+request.session[key] = value
+# Ví dụ
+request.session['user_id'] = 123
+
+#Truy cập đến session
+user_id = request.session['user_id']
+
+#Xóa một session theo key
+del request.session['user_id']
+#Xóa tất cả session
+request.session.flush()
+
+```
+
+---
+
+### 🔥 Cookies
+
+#### Cookies là gì ?
+
+- **Cookies** là những mẩu dữ liệu nhỏ được lưu trữ trên thiết bị của người dùng (thường là trong trình duyệt web) từ các trang web họ truy cập. Các tệp dữ liệu này được sử dụng để lưu trữ thông tin liên quan đến các tương tác và sở thích của người dùng trên trang web. 
+- Cookies thường bao gồm các thông tin như: **ID người dùng**, **Tùy chọn cá nhân**, **Các mặt hàng trong giỏ hàng** ...
+- Cookies không mất đi khi tắt trình duyệt.
+- Trình duyệt sẽ gửi thông tin Cookies trong mỗi request đến server
+
+
+#### Sử dụng Cookies trong Django
+
+Cú pháp:
+
+```python
+response.set_cookie(key, value='', max_age=None, expires=None, path='/', domain=None, secure=False, httponly=False, samesite=None)
+```
+
+Trong đó:
+
+
+- `key`: Tên của cookie.
+- `value`: Giá trị bạn muốn lưu trữ trong cookie.
+- `max_age`: Thời gian tồn tại của cookie (được tính bằng giây).
+- `expires`: Ngày và giờ hết hạn của cookie.
+- `path`: Đường dẫn mà cookie áp dụng.
+- `domain`: Tên miền mà cookie áp dụng.
+- `secure`: Xác định liệu cookie có được gửi qua kết nối an toàn (HTTPS) hay không.
+- `httponly`: Xác định liệu cookie có thể được truy cập bằng JavaScript hay không.
+- `samesite`: Xác định chính sách SameSite cho cookie.
+
+Ví dụ:
+
+```python
+# views.py
+from django.http import HttpResponse
+from datetime import datetime, timedelta
+
+#Ví dụ set cookie
+def set_cookie(request):
+    response = HttpResponse("Cookie set successfully")
+     # Thời gian tồn tại cookie: 1 giờ
+    response.set_cookie('username', 'john_doe', expires=3600) 
+    # Hết hạn sau 1 ngày
+    expiration_date = datetime.now() + timedelta(days=1)
+    response.set_cookie('username', 'john_doe', expires=expiration_date)
+     # Hết hạn sau 1 năm
+    expiration_date = datetime.now() + timedelta(days=365)
+    response.set_cookie('username', 'john_doe', expires=expiration_date)
+    return response
+
+# Ví dụ: Get cookies
+def get_cookie(request):
+    username = request.COOKIES.get('username')
+    return HttpResponse(f"Username from cookie: {username}")
+
+# Ví dụ: Hủy cookies
+def delete_cookie(request):
+    response = HttpResponse("Cookie deleted successfully")
+    #Dùng phương thức delete_cookie
+    response.delete_cookie('username')
+    #Hoặc làm cho cookie hết hạn
+    # Đặt thời gian hết hạn trong quá khứ
+    expiration_date = datetime(2000, 1, 1)  
+    response.set_cookie('username', 'john_doe',expires=expiration_date)
+    return response
+
+```
+
+---
 
 ## 💛 Messages framework
 
+Django Messages Framework là một phần của Django giúp bạn hiển thị thông báo một lần (còn gọi là “flash message”) cho người dùng sau khi xử lý một biểu mẫu hoặc một số loại tương tác khác. Đây là một cách tiện lợi để thông báo cho người dùng về kết quả của họ.
+
+### Phân loại các kiểu Message
+
+
+| Level Constant | Tag      | Purpose |
+|----------------|----------|----------------------------|
+| DEBUG          | debug    | Mục đích Debug  |
+| INFO           | info     | Hiển thị thông tin cho người dùng |
+| SUCCESS        | success  | Thông báo thành công|
+| WARNING        | warning  | Đưa ra một cảnh báo|
+| ERROR          | error    | Thông báo lỗi  |
+
+### Tạo một Message
+
+```python
+from django.contrib import messages
+
+messages.add_message(request, messages.INFO, "Hello world.")
+#hoặc sử dụng các phương thức có tên tương tứng với Tag
+messages.debug(request, "%s SQL statements were executed." % count)
+messages.info(request, "Three credits remain in your account.")
+messages.success(request, "Profile details updated.")
+messages.warning(request, "Your account expires in three days.")
+messages.error(request, "Document deleted.")
+```
+
+### Hiển thị Message ra Template
+
+```django
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+```
+
+Chi tiết xem thêm: https://docs.djangoproject.com/en/5.0/ref/contrib/messages/
+
 ## 💛 Homeworks Guide
 
-Tạo `Form Checkout`
+Thực hành tạo Form `FormCheckout`

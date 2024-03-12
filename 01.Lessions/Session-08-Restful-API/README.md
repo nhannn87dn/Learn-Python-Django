@@ -1,12 +1,14 @@
-
 # Session 08 - Restful API
-
-## 💛 API ?
 
 ## 💛 Restful API ?
 
-## 💛 Tạo một API Resource
+## 💛 Xây dựng hệ thống Restful API
 
-## 💛 Authentication and Authorization
+## 💛 Bảo mật hệ thống
+
+### Authentication and Authorization
+
+### CORs
 
 ## 💛 Homeworks Guide
+
