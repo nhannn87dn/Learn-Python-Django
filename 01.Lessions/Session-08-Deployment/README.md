@@ -1,5 +1,5 @@
 # Session 08 - Deployment
 
-## 💛 Restful API ?
+## 💛 Django Debug Toolbar ?
 
-## 💛 Xây dựng hệ thống Restful API
+## 💛 Deployment
