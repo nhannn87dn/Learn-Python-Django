@@ -113,8 +113,57 @@ class ProductAdmin(admin.ModelAdmin):
 
 Check lại màn hình chỉnh sửa Product bạn sẽ thấy khung soạn thảo ckeditor.
 
-## 💛 Cache
 
 ## 💛 Send email
 
+Tài liệu: https://docs.djangoproject.com/en/5.0/topics/email/
+
+
+
+Để gửi email trong Django sử dụng `EmailMessage`, bạn có thể làm theo các bước sau¹²:
+
+1. **Cấu hình SMTP**: Trước tiên, bạn cần cấu hình thông tin SMTP trong tệp `settings.py` của dự án Django¹. Ví dụ:
+
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'your-email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your-email-password'
+```
+
+Với Gmail, mật khẩu bạn nên tạo `Mật khẩu ứng dụng` theo [hướng dẫn sau](https://support.google.com/mail/answer/185833?hl=vi)
+
+2. **Gửi email**: Sau khi cấu hình SMTP, bạn có thể gửi email bằng cách sử dụng lớp `EmailMessage`¹. Ví dụ:
+
+```python
+from django.core.mail import EmailMessage
+
+email = EmailMessage(
+    subject='Hello',
+    body='Body goes here',
+    from_email='from@example.com',
+    to=['first@example.com', 'second@example.com', 'third@example.com'],
+    cc=['cc@example.com'],
+    bcc=['bcc@example.com'],
+    reply_to=['another@example.com'],
+)
+#mặc định body là text/plain
+#Nếu muốn gửi html thì thêm dòng sau
+email.content_subtype = "html"  # Main content is now text/html
+#Đính kèm file
+email.attach_file("/images/weather_map.png")
+result = email.send() # 1 success, 0 fail
+print('Status Send', result)
+```
+
+
 ## 💛 Authentication và Authorization
+
+Django cung cấp cho bạn phương thức xác thực và phân quyền vô cùng mạnh mẽ. Mặc định nó được tạo sẵn trong lần `migrate` đầu tiên.
+
+- Permissions
+- Groups
+
+Chi tiết: https://docs.djangoproject.com/en/5.0/topics/auth/
