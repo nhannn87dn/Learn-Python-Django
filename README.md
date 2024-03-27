@@ -27,18 +27,17 @@ Mục tiêu là sử dụng Django framework:
 1. Tạo một App mới trong Django framework
 1. Giới thiệu cấu trúc của Django framework
 
-### Session 02 - URLs and views
-
-1. MVT Patten trong Django
-1. Tìm hiểu về Request, Response
-1. Tìm hiểu về View
-1. Tìm hiểu về Template
-
-### Session 03 - Model and databases
+### Session 02 - Model and databases
 
 1. Cấu hình kết nối Database
 1. Tìm hiểu về Model
 1. Migration
+1. Python Shell
+
+### Session 03 - Queries
+
+1. Query Data: select, update, delete, relationships
+1. Pagination, Sắp xếp dữ liệu
 
 
 ### Session 04 - Django Admin 
@@ -47,36 +46,35 @@ Mục tiêu là sử dụng Django framework:
 1. Admin actions
 1. Admin documentation generator
 
-### Session 05 - Forms
+
+### Session 05 - URLs and views
+
+1. MVT Patten trong Django
+1. Tìm hiểu về Request, Response
+1. Tìm hiểu về View
+1. Tìm hiểu về Template
+
+
+### Session 06 - Forms
 
 1. View decorators
 1. Methods Form
 1. File Uploads
-
-
-### Session 06 - Queries
-
-1. Query Data: select, update, delete, relationships
-1. Pagination, Sắp xếp dữ liệu
-
+1. Validators
+1. Session & Cookie
+1. Messages
 
 ### Session 07 - Advanced
 
-1. Tìm hiểu về Middleware
-1. Tìm hiểu về Session
+1. Tích hợp CKEditor
 1. Send email
 1. Caching
 1. Logging
-1. Validation Data
+1. Authentication và Authorization
 
-### Session 08 - Authentication
+### Session 08 - Deployment
 
-1. Phân quyền truy cập
-
-
-### Session 09 - Restful API
-
-1. Tạo một resource API
+1. Deployment ứng dụng lên các dịch vụ Cloud
 
 
 ## Documents
