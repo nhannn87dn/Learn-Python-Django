@@ -8,6 +8,8 @@ Trong Django, **View** là một hàm Python hoặc một phương thức (trong
 
 Response có thể là nội dung HTML của một trang web, hoặc một redirect, hoặc một lỗi 404, hoặc một tài liệu XML, hoặc một hình ảnh... hoặc bất cứ thứ gì. View chứa bất kỳ logic tùy ý nào cần thiết để trả về response đó.
 
+![mvt](img/mvt.png)
+
 Django sử dụng mô hình MVT (Model-View-Template) thay vì mô hình MVC (Model-View-Controller) truyền thống. Trong Django, View được cọi như là controller và teamplate như là view trong mô hình MVC.
 
 Theo cách triển khai của Django, view sẽ thể hiện dữ liệu trả về cho người dùng. Nó không chỉ là cách hiển thị dữ liệu như thế nào, mà còn là những dữ liệu nào được hiển thị.
