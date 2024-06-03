@@ -745,7 +745,21 @@ Click vào chi tiết 1 sản phẩm, bạn sẽ chuyển sang trang chi tiết 
 
 Khi tạo các trang web bạn dễ nhận thấy là chúng dùng chung phần header, footer. Để có thể tái sử dụng, tránh sự lặp lại về code chúng ta có thể dùng một `layout` chung cho các trang đó.
 
-Tạo `product/templates/layout.html`
+```code
+├── projectBikeStore
+    ├── bikestore
+    │   ├── manage.py
+    │   ├── templates
+    │   │   ├── layout.html
+    │   └── bikestore
+    │       
+    ├── venvBikeStore
+```
+
+
+Tạo `bikestore/templates/layout.html` theo cấu trúc như trên
+
+
 
 ```django
 <!DOCTYPE html>
@@ -761,6 +775,25 @@ Tạo `product/templates/layout.html`
 </body>
 </html>
 ```
+
+
+Sau đó , Khai báo thư mục `templates` cho django trong `settings.py`
+
+```python
+# bikestore/settings.py
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        # Edit lại giá trị cho 'DIRS'
+    },
+]
+
+```
+
+Như vậy ngoài `templates` riêng trong từng app, thì django nhận thêm `bikstore/templates` làm template nữa.
+
+
 
 Khi đó file `product/templates/product_list.html` muốn sử dụng layout này thì sửa lại như sau:
 
