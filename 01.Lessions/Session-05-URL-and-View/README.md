@@ -904,12 +904,23 @@ Sau mỗi lần thay đổi nội dung các  static files, để nó đưa hết
 Khi đó trong các template bạn dùng
 
 ```django
+# Đặt trên đầu file
 {% load static %}
+```
+
+Sau đó trong các template bạn dùng
+
+```django
 <link rel="stylesheet" href="{% static 'css/global.css' %}">
 <link rel="stylesheet" href="{% static 'css/product.css' %}">
 <img src="{% static 'images/example.jpg' %}" alt="My image">
 <script src="{% static 'js/cart.js' %}"></script>
 ```
+
+**Xem thêm**
+
+- Cách nhúng Bootstrap 5 vào Django: https://www.w3schools.com/django/django_add_bootstrap5.php
+- Cách nhúng Font Awesome Free vào Django: https://docs.fontawesome.com/web/use-with/python-django/
 
 
 ## 💛 Homeworks Guide

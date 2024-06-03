@@ -100,7 +100,7 @@ Cấu trúc thư mục của môi trường ảo Python (venv) gồm các thành
 - Scripts: Thư mục này chứa các script cần thiết để kích hoạt môi trường ảo. Trên hệ điều hành Linux, thư mục này thường được gọi là `bin`.
 - pyvenv.cfg: Đây là tệp cấu hình cho môi trường ảo. Nó chứa thông tin về phiên bản Python được sử dụng và liệu có sử dụng các package hệ thống hay không.
 
-**Bước 2** Kích hoạt môi trường
+**Bước 2** Kích hoạt môi trường ảo (activated)
 
 Command Prompt của Windows
 
@@ -132,6 +132,12 @@ Terminal của Mac/Ubuntu
 Ngoài các trên các bạn có thể dễ dàng thiết lập môi trường với ứng dụng `PyCharm`
 
 [Xem tại đây](PyCharm-Django.md)
+
+**Hủy kích hoạt môi trường ảo:**
+
+```bash
+deactivate
+```
 
 ### 🔥 Bước 2 -  Cài đặt Django framework
 
@@ -380,3 +386,128 @@ Kết quả
 ## 💛 Tìm hiểu Cấu hình  `settings.py`
 
 Chi tiết: https://docs.djangoproject.com/en/5.0/ref/settings/
+
+## 💛 Hướng dẫn sử dụng `pip` trong Python
+
+### 🔥 Giới thiệu
+
+`pip` là công cụ quản lý gói tiêu chuẩn cho Python, cho phép bạn cài đặt, nâng cấp và quản lý các thư viện và gói phần mềm Python từ Python Package Index (PyPI) và các kho lưu trữ khác.
+
+#### Cài đặt `pip`
+
+Nếu bạn đã cài đặt Python, rất có thể bạn đã có `pip`. Bạn có thể kiểm tra phiên bản `pip` bằng cách:
+
+```bash
+pip --version
+```
+
+Nếu `pip` chưa được cài đặt, bạn có thể cài đặt nó bằng cách:
+
+- **Trên Windows**: Tải về [get-pip.py](https://bootstrap.pypa.io/get-pip.py) và chạy lệnh sau trong cmd:
+  ```bash
+  python get-pip.py
+  ```
+
+- **Trên macOS và Linux**: Sử dụng `curl` để tải về và cài đặt:
+  ```bash
+  curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  python get-pip.py
+  ```
+
+### 🔥 Cài đặt gói
+
+Để cài đặt một gói, sử dụng lệnh `pip install`:
+
+```bash
+pip install package_name
+```
+
+**Ví dụ:**
+
+```bash
+pip install requests
+```
+
+Bạn cũng có thể cài đặt một phiên bản cụ thể của gói:
+
+```bash
+pip install package_name==version
+```
+
+**Ví dụ:**
+
+```bash
+pip install requests==2.25.1
+```
+
+### 🔥 Nâng cấp gói
+
+Để nâng cấp một gói lên phiên bản mới nhất, sử dụng lệnh:
+
+```bash
+pip install --upgrade package_name
+```
+
+**Ví dụ:**
+
+```bash
+pip install --upgrade requests
+```
+
+#### Gỡ cài đặt gói
+
+Để gỡ cài đặt một gói, sử dụng lệnh:
+
+```bash
+pip uninstall package_name
+```
+
+**Ví dụ:**
+
+```bash
+pip uninstall requests
+```
+
+### 🔥 Liệt kê các gói đã cài đặt
+
+Để liệt kê tất cả các gói đã cài đặt, sử dụng lệnh:
+
+```bash
+pip list
+```
+
+### 🔥 Tìm kiếm gói
+
+Để tìm kiếm một gói trong PyPI, sử dụng lệnh:
+
+```bash
+pip search query
+```
+
+**Ví dụ:**
+
+```bash
+pip search requests
+```
+
+### 🔥  Kiểm tra các gói cần cập nhật
+
+Để kiểm tra các gói đã cài đặt cần cập nhật, sử dụng lệnh:
+
+```bash
+pip list --outdated
+```
+
+### 🔥  Lưu và cài đặt từ tệp requirements
+
+Để lưu tất cả các gói hiện tại vào một tệp `requirements.txt`, sử dụng lệnh:
+
+```bash
+pip freeze > requirements.txt
+```
+
+Tệp `requirements.txt` có thể được sử dụng để cài đặt các gói trên một môi trường khác:
+
+```bash
+pip install -r requirements.txt
+```
