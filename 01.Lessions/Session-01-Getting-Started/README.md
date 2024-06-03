@@ -49,7 +49,12 @@ Nếu chưa cài bạn có thể tải bản cài đặt Python tại link sau: 
 
 Ngoài ra bạn cần cài một kiểu Database như MySQL, PostgreSQL
 
-## 💛Cấu hình môi trường ảo cho dự án (Virtual Environment)
+
+## 💛 Tạo một Project với Django framework
+
+Với các ứng dụng python, mỗi dự án sẽ có các cấu hình riêng, danh sách các gói cài đặt riêng nên mỗi project được chạy trong một môi trường ảo riêng của nó.
+
+### 🔥 Bước 1 - Cấu hình môi trường ảo cho dự án (Virtual Environment)
 
 
 Virtual Environment (môi trường ảo) trong Python, thường được gọi là "virtualenv", là một công cụ quan trọng khi phát triển với Django. Nó tạo ra một môi trường Python độc lập, cho phép bạn quản lý các phụ thuộc cụ thể của dự án mà không ảnh hưởng đến cài đặt Python trên toàn hệ thống.
@@ -123,7 +128,12 @@ Terminal của Mac/Ubuntu
 (venvBikeStore) ...$
 ```
 
-## 💛 Cài đặt Django framework
+
+Ngoài các trên các bạn có thể dễ dàng thiết lập môi trường với ứng dụng `PyCharm`
+
+[Xem tại đây](PyCharm-Django.md)
+
+### 🔥 Bước 2 -  Cài đặt Django framework
 
 Sau khi bạn activated môi trường ảo xong. Để cài đặt `Django framework` cho dự án, bạn thực hiện lệnh:
 
@@ -142,9 +152,9 @@ Terminal của Mac/Ubuntu
 Sau đó hệ thống sẽ tải và cài đặt Django trong môi trường ảo.
 
 
-## 💛 Tạo một Project với Django framework
+### 🔥 Bước 3 - Khởi tạo một project Django
 
-Để tạo một project có tên `bikestore` bạn sử dụng câu lệnh sau
+Để tạo một project django có tên `bikestore` bạn sử dụng câu lệnh sau
 
 ```bash
 django-admin startproject bikestore
@@ -167,6 +177,8 @@ Khi đó `projectBikeStore` của bạn sẽ có cấu trúc thư mục như sau
 
 Bao gồm folder cấu hình môi trường ảo và folder chứa code dự án.
 
+
+
 ## 💛Giới thiệu cấu trúc của Django framework
 
 Trong cấu trúc thư mục trên
@@ -188,12 +200,14 @@ Trong cấu trúc thư mục trên
 Command Prompt của Windows
 
 ```bash
-(venvBikeStore) D:\Test-Django\projectBikeStore>py manage.py runserver
+(venvBikeStore) D:\Test-Django\projectBikeStore>cd bikestore
+(venvBikeStore) D:\Test-Django\projectBikeStore\bikestore>py manage.py runserver
 ```
 
 Terminal của Mac/Ubuntu
 
 ```bash
+(venvBikeStore) ...$ cd bikestore
 (venvBikeStore) ...$ python manage.py runserver
 ```
 
