@@ -20,7 +20,9 @@ Trong Django, bạn có thể xem câu lệnh SQL được tạo ra từ một `
 
 ```python
 # Tạo một QuerySet
-queryset = Product.objects.all()
+queryset = Product.objects.all() # trả về một danh sách các đối tượng Product
+#Hoặc
+queryset = Product.objects.all().values() # trả về một danh sách các từ điển, mỗi từ điển chứa các trường của đối tượng Product
 
 # In câu lệnh SQL
 print(str(queryset.query))
@@ -257,6 +259,179 @@ last_book = Book.objects.last()
 if last_book is not None:
     print(last_book.title)
 ```
+
+
+## 💛 Cơ Chế Lazy (Tìm hiểu thêm)
+
+Trong Django ORM, các truy vấn cơ sở dữ liệu được thực hiện một cách "lười biếng" (lazy). Điều này có nghĩa là các truy vấn không được thực hiện ngay lập tức khi bạn tạo chúng mà chỉ khi bạn thực sự cần dữ liệu.
+
+Thay vào đó, nó chỉ tạo ra một đối tượng `QuerySet` đại diện cho truy vấn đó. Cơ sở dữ liệu chỉ được truy vấn khi bạn thực sự cần dữ liệu, chẳng hạn như khi bạn lặp qua queryset, truy cập vào phần tử của nó, hoặc gọi các phương thức như `list()`, `len()`, hoặc `bool()`.
+
+Cơ chế này giúp tối ưu hóa hiệu suất bằng cách giảm số lượng truy vấn cơ sở dữ liệu không cần thiết.
+
+### Ví Dụ Về Cơ Chế Lazy
+
+Giả sử bạn có một model `Product` như sau:
+
+```python
+# models.py
+
+from django.db import models
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+```
+
+#### Tạo QuerySet
+
+Khi bạn tạo một queryset, không có truy vấn nào được gửi đến cơ sở dữ liệu:
+
+```python
+# views.py
+
+from .models import Product
+
+# Tạo queryset, nhưng chưa truy vấn cơ sở dữ liệu
+products = Product.objects.filter(is_active=True)
+```
+
+#### Thực Hiện Truy Vấn
+
+Truy vấn chỉ được thực hiện khi bạn thực sự cần dữ liệu. Dưới đây là một số tình huống phổ biến khi truy vấn được thực hiện:
+
+1. **Lặp Qua QuerySet**:
+
+    ```python
+    for product in products:
+        print(product.name)
+    ```
+
+2. **Chuyển QuerySet Thành Danh Sách**:
+
+    ```python
+    product_list = list(products)
+    ```
+
+3. **Truy Cập Từng Phần Tử**:
+
+    ```python
+    first_product = products[0]
+    ```
+
+4. **Đếm Số Lượng Phần Tử**:
+
+    ```python
+    count = products.count()
+    ```
+
+5. **Đánh Giá QuerySet Trong Điều Kiện**:
+
+    ```python
+    if products:
+        print("Có sản phẩm")
+    ```
+
+### Ví Dụ Cụ Thể
+
+Giả sử bạn có một view để hiển thị danh sách sản phẩm:
+
+```python
+# views.py
+
+from django.shortcuts import render
+from .models import Product
+
+def product_list(request):
+    # Tạo queryset nhưng chưa thực hiện truy vấn
+    products = Product.objects.filter(is_active=True)
+    
+    # Truy vấn chỉ được thực hiện khi lặp qua queryset hoặc chuyển thành danh sách
+    active_products = list(products)
+    
+    return render(request, 'product_list.html', {'products': active_products})
+```
+
+### Lợi Ích Của Cơ Chế Lazy
+
+1. **Hiệu Suất**: Giảm số lượng truy vấn không cần thiết đến cơ sở dữ liệu, giúp tối ưu hóa hiệu suất.
+2. **Linh Hoạt**: Cho phép xây dựng các truy vấn phức tạp một cách tuần tự, chỉ thực hiện truy vấn cuối cùng khi cần thiết.
+
+
+Để chứng minh rằng Django ORM không thực hiện truy vấn ngay lập tức mà chỉ khi cần thiết (lazy evaluation), bạn có thể sử dụng một trigger trong cơ sở dữ liệu để ghi log thời điểm truy vấn được thực hiện. Dưới đây là một ví dụ về cách tạo một trigger trong PostgreSQL để ghi log mỗi khi có truy vấn thực hiện trên bảng `product`.
+
+### 1. Tạo Bảng Log
+
+Đầu tiên, bạn cần tạo một bảng để ghi log khi trigger được kích hoạt:
+
+```sql
+CREATE TABLE query_log (
+    id SERIAL PRIMARY KEY,
+    action_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    operation TEXT,
+    query TEXT
+);
+```
+
+### 2. Tạo Trigger Function
+
+Tiếp theo, bạn tạo một trigger function để ghi log thông tin truy vấn:
+
+```sql
+CREATE OR REPLACE FUNCTION log_query() RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO query_log (operation, query)
+    VALUES (TG_OP, current_query());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 3. Tạo Trigger
+
+Sau đó, tạo một trigger để gọi function `log_query` mỗi khi có truy vấn `SELECT` trên bảng `product`:
+
+```sql
+CREATE TRIGGER log_select_query
+AFTER SELECT ON product
+FOR EACH STATEMENT
+EXECUTE FUNCTION log_query();
+```
+
+### 4. Kiểm Tra Lazy Evaluation
+
+Bây giờ bạn có thể kiểm tra lazy evaluation bằng cách tạo một queryset trong Django và quan sát log:
+
+```python
+# views.py
+
+from django.shortcuts import render
+from .models import Product
+
+def product_list(request):
+    # Tạo queryset nhưng chưa thực hiện truy vấn
+    products = Product.objects.filter(is_active=True)
+    
+    # Đến đây chưa có truy vấn nào được thực hiện
+    print("Query chưa thực hiện")
+
+    # Thực hiện truy vấn khi lặp qua queryset
+    for product in products:
+        print(product.name)
+    
+    return render(request, 'product_list.html', {'products': products})
+```
+
+#### Kiểm Tra Log
+
+Sau khi chạy view, kiểm tra bảng `query_log` để xem log của truy vấn:
+
+```sql
+SELECT * FROM query_log;
+```
+
+Bạn sẽ thấy rằng log chỉ xuất hiện khi dữ liệu thực sự được truy vấn (khi lặp qua queryset).
 
 
 
