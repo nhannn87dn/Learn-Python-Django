@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Details about {{ categories.id }} {{ categories.category_name }}
+{% endblock %}
+
+
+{% block content %}
+  <h1>{{ categories.id }} {{ categories.category_name }}</h1>
+  
+  <p>Phone {{ categories.description }}</p>
+  
+  <p>Back to <a href="/categories">Categories</a></p>
+  
+{% endblock %}

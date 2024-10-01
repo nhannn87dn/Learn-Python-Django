@@ -1,0 +1,27 @@
+{% extends "default-layout.html" %}
+{% load bootstrap5 %}
+{% load static %}
+{% block title %}
+Đăng nhập
+{% endblock %}
+
+{% block content %}
+<h1>Đăng nhập</h1>
+<form method="post">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+    <p><a href="{% url 'customer_register' %}">Đăng ký</a> nếu bạn chưa có tài khoản</p>
+    <p><a href="{% url 'customer_forgot_password' %}">Quên mật khẩu?</a></p>
+</form>
+{% endblock %}
+
+
+

@@ -1,0 +1,153 @@
+{% extends "default-layout.html" %}
+{% load static %}
+{% block title %}
+Product List
+{% endblock %}
+
+{% block content %}
+
+<h1>Cart Checkout</h1>
+    <div id="cart_list">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %} >
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+
+    {% if products %}
+        <div>
+
+            <ul class="product_list">
+                {% for p in products %}
+                <li>
+                    <span>
+                        {% if p.thumbnail %}
+                        <img height='50' src="{{ p.thumbnail.url }}" alt="{{ p.name}}">
+                        {% endif %}
+                    </span>
+                    <span>{{ p.name}}</span>
+                    <span>{{ p.price}}</span>
+                    <span>
+                        {{ p.quantity}}
+                    </span>
+                    <span>{{ p.amount}}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div>Total: <strong>{{ total }}</strong></div>
+        </div>
+
+    {% else %}
+        <p>Không có sản phẩm nào trong giỏ hàng.</p>
+        <button type="button" onclick="goHome()">Trang chủ</button>
+    {% endif %}
+    </div>
+
+<div id="customer_info">
+    
+    
+    {% load form_tags %}
+
+    <form class="form" action="/cart/checkout/" method="POST">
+        {% if customer %}
+            <h2>Thông tin khách hàng</h2>
+            <p>Tên: {{ customer.first_name }} {{ customer.last_name }}</p>
+            <p>Email: {{ customer.email }}</p>
+            <p>Điện thoại: {{ customer.phone }}</p>
+            <p>Địa chỉ: {{ customer.street }}, {{ customer.city }}, {{ customer.state }}, {{ customer.zip_code }}</p>
+            <div style="display:none" id="hidden_fields">
+                {{ form.id }}  {# Hidden input for customer ID #}
+                {{ form.first_name }}  {# Hidden input for first name #}
+                {{ form.last_name }}   {# Hidden input for last name #}
+                {{ form.email }}       {# Hidden input for email #}
+                {{ form.phone }}       {# Hidden input for phone #}
+                {{ form.street }}      {# Hidden input for street #}
+                {{ form.city }}        {# Hidden input for city #}
+                {{ form.state }}       {# Hidden input for state #}
+                {{ form.zip_code }}    {# Hidden input for zip code #}
+            </div>
+            <div id="visible_fields">
+                <div class="mb-3 {% if form.payment_type.errors %}has-error{% endif %}">
+                    {{ form.payment_type.label_tag }}
+                    <div class="field_item">
+                        {{ form.payment_type }}
+
+                        {% if form.payment_type.help_text %}
+                        <div id="{{ form.payment_type.auto_id }}_helptext" class="form-text">
+                            {{ form.payment_type.help_text|safe }}
+                        </div>
+                        {% endif %}
+
+                        {% if form.payment_type.errors %}
+                            <div class="invalid-feedback">
+                                {{ form.payment_type.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3 {% if form.order_note.errors %}has-error{% endif %}">
+                    {{ form.order_note.label_tag }}
+                    <div class="field_item">
+                        {{ form.order_note }}
+
+                        {% if form.order_note.help_text %}
+                        <div id="{{ form.order_note.auto_id }}_helptext" class="form-text">
+                            {{ form.order_note.help_text|safe }}
+                        </div>
+                        {% endif %}
+
+                        {% if form.order_note.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.order_note.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                   
+                </div>
+            </div>
+            {# Khi chưa login #}
+        {% else %}
+                {# Include the hidden fields #}
+                {% for hidden in form.hidden_fields %}
+                <div id="hidden_fields">{{ hidden }}</div>
+                {% endfor %}
+                {# Include the visible fields #}
+                {% for field in form.visible_fields %}
+                    <div class="mb-3 {% if field.errors %}has-error{% endif %}">
+                        {{ field.label_tag }}
+
+                        <div class="field_item">
+                            {{ field }}
+
+                            {% if field.help_text %}
+                            <div id="{{ field.auto_id }}_helptext" class="form-text">
+                                {{ field.help_text|safe }}
+                            </div>
+                            {% endif %}
+
+                            {% if field.errors %}
+                            <div class="invalid-feedback">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+        {% endif %}
+        
+        
+
+        <div>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Đặt hàng</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

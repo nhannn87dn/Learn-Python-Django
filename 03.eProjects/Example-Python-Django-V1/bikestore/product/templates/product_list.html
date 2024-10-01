@@ -1,0 +1,119 @@
+{% extends "default-layout.html" %}
+<!--===========--LOAD STATIC---==============-->
+{% load static %}
+<!--===========--LOAD Tags---==============-->
+{% load query_transform %}
+<!--===========--META TITLE---==============-->
+{% block title %}
+Product List
+{% endblock %}
+<!--===========--END META TITLE---==============-->
+
+<!--===========--CSS---==============-->
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/products.css' %}">
+{% endblock %}
+<!--===========--END CSS---==============-->
+
+{% block content %}
+
+<div class="row">
+    <div class="col col-md-3">
+        <h4>Lọc theo danh mục</h4>
+        <ul>
+            <li>
+                <a href="?{% query_transform request category=0  %}">Tất cả</a>
+            </li>
+            {% for category in categories %}
+            <li>
+                <a href="?{% query_transform request category=category.id  %}">{{ category.category_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+         <h4>Lọc theo thương hiệu</h4>
+        <ul>
+            <li>
+                <a href="?{% query_transform request brand=0  %}">Tất cả</a>
+            </li>
+            {% for brand in brands %}
+            <li>
+                <a href="?{% query_transform request brand=brand.id  %}">{{ brand.brand_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+         <h4>Lọc theo mức giá</h4>
+    </div>
+    <div class="col col-md-9">
+
+        <div class="flex">
+            <h1>Product List</h1>
+            <div class="extra">
+                <a href="?{% query_transform request sort_by='price' sort_type='ASC' %}">Giá tăng dần</a>
+                <a href="?{% query_transform request sort_by='price' sort_type='DESC' %}">Giá giảm dần</a>
+            </div>
+        </div>
+
+
+        <div id="product_list" class="row row-cols-4 gy-4">
+            {% for p in products_page %}
+            <div class="col">
+                <a class="text-dark" style="text-decoration: none" href="/products/{{ p.id }}">
+                    <div class="card">
+                        <div class="photo">
+                            {% if p.thumbnail %}
+                            <img height='160' width="160" src="{{ p.thumbnail.url }}" alt="{{ p.product_name}}">
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ p.product_name }}</h5>
+                            <strong class="card-price text-danger">${{ p.price }}</strong>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="pagination_wrapper text-center my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+
+                    {% if products_page.has_previous %}
+                     <li class="page-item">
+                        <a class="page-link" href="?{% query_transform request page=1 %}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% query_transform request page=products_page.previous_page_number %}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in products_page.paginator.page_range %}
+                    {% if products_page.number == num %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% query_transform request page=num %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if products_page.has_next %}
+
+                    <li class="page-item">
+                        <a class="page-link" href="?{% query_transform request page=products_page.next_page_number %}">Next</a>
+                    </li>
+                     <li class="page-item">
+                        <a class="page-link" href="?{% query_transform request page=products_page.paginator.num_pages %}">Last</a>
+                    </li>
+                    {% endif %}
+
+
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

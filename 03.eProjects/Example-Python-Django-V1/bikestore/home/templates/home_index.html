@@ -1,0 +1,24 @@
+{% extends "default-layout.html" %}
+
+{% block title %}
+HOme Page
+{% endblock %}
+
+{% block content %}
+   My first name is {{ categories.id }}. My last name is {{ categories.name }}.
+
+   <h2>Sản phẩm từ danh mục 1</h2>
+   <ul>
+   {% for product in products_category_1 %}
+      <li><a href="/products/{{ product.id }}">{{ product.product_name }} - {{ product.price }}</a></li>
+   {% endfor %}
+   </ul>
+
+   <h2>Sản phẩm từ danh mục 2</h2>
+   <ul>
+   {% for product in products_category_2 %}
+   <li><a href="/products/{{ product.id }}">{{ product.product_name }} - {{ product.price }}</a></li>
+   {% endfor %}
+   </ul>
+
+{% endblock %}

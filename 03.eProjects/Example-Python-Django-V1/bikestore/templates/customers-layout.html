@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Ngọc Nhân">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!--BEGIN BOOTSTRAP STYLE-->
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    <!--END BOOTSTRAP STYLE-->
+    <!--BEGIN FONTAWESOME-->
+    <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <!--END FONTAWESOME-->
+    <!--BEGIN CSS CUSTOM-->
+    {% block css %}{% endblock %}
+    <!--END CSS CUSTOM-->
+</head>
+<body>
+{% include 'header.html' %}
+<main class="my-5">
+    <div class="container">
+        <div class="main_wrapper row">
+            <div class="col col-12 col-md-2 col-lg-2">
+               <ul>
+                   <li><a href="/customer/">Dashboard</a></li>
+                    <li><a href="/customer/profile/">Profile</a></li>
+                    <li><a href="/customer/orders/">Orders</a></li>
+                    <li><a href="/customer/logout/">Đăng xuất</a></li>
+               </ul>
+            </div>
+            <div class="col col-12 col-md-10  col-lg-10">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+    </div>
+</main>
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                Footer Col 1
+            </div>
+            <div class="col">
+                Footer Col 2
+            </div>
+            <div class="col">
+                Footer Col 3
+            </div>
+            <div class="col">
+                Footer Col 4
+            </div>
+        </div>
+    </div>
+</footer>
+<!--BEGIN BOOTSTRAP JS-->
+{% bootstrap_javascript %}
+<!--END BOOTSTRAP JS-->
+<!--BEGIN JS CUSTOM -->
+{% block js %}{% endblock %}
+<!--END JS CUSTOM -->
+</body>
+</html>

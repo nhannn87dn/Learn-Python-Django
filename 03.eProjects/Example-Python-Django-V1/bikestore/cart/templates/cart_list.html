@@ -1,0 +1,172 @@
+{% extends "default-layout.html" %}
+
+{% block title %}
+Product List
+{% endblock %}
+
+{% block content %}
+
+{% load static %}
+   <h1>Cart List</h1>
+   {% if messages %}
+   {% for message in messages %}
+       <div class="alert alert-{{ message.tags }}" role="alert">
+           {{ message }}
+       </div>
+   {% endfor %}
+{% endif %}
+    {% if products %}
+        <div>
+
+            <ul class="product_list">
+                {% for p in products %}
+                <li>
+                    <span>
+                        {% if p.thumbnail %}
+                        <img height='50' src="{{ p.thumbnail.url }}" alt="{{ p.name}}">
+                        {% endif %}
+                    </span>
+                    <span>{{ p.name}}</span>
+                    <span>{{ p.price}}</span>
+                    <span>
+                        <button class="btn btn-warning" type="button" onclick="decreaseQuantity({{ p.id}})">-</button>
+                        <input type="number" name="quantity" min="0" step="1" max="10" value="{{ p.quantity}}">
+                        <button class="btn btn-success" type="button" onclick="increaseQuantity({{ p.id}})">+</button>
+                    </span>
+                    <span>{{ p.amount}}</span>
+                    <span><button class="btn btn-danger" type="button" onclick="removeItem({{ p.id}})">Xóa</button></span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div>Total: <strong>{{ total }}</strong></div>
+        </div>
+        <div>
+
+            <button type="button" class="btn btn-primary" onclick="cartCheckout()">Thanh toán</button>
+            <button type="button" class="btn btn-primary" onclick="clearCart()">Xóa giỏ hàng</button>
+        </div>
+    {% else %}
+        <p>Không có sản phẩm nào trong giỏ hàng.</p>
+        <button type="button" onclick="goHome()">Trang chủ</button>
+    {% endif %}
+
+     {% csrf_token %}
+
+    <script>
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        const decreaseQuantity = async (id)=>{
+            console.log(id);
+            try
+            {
+                const response = await fetch('/cart/decrease-quantity/', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': csrftoken
+                    },
+                    mode: 'same-origin', // Do not send CSRF token to another domain.
+                    cache: "no-cache",
+                    body: JSON.stringify({id: id}), // body data type must match "Content-Type" header
+                });
+                const results = await response.json();
+
+                if(!results.success){
+                    console.log(results.message);
+                }
+                window.location.href = '/cart/';
+            } catch (error) {
+                console.error(`Error: `,error);
+            }
+        }
+
+        const increaseQuantity = async (id)=>{
+            console.log(id);
+
+            try
+            {
+                const response = await fetch('/cart/increase-quantity/', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': csrftoken
+                    },
+                    mode: 'same-origin', // Do not send CSRF token to another domain.
+                    cache: "no-cache",
+                    body: JSON.stringify({id: id}), // body data type must match "Content-Type" header
+                });
+                const results = await response.json();
+
+                if(!results.success){
+                    console.log(results.message);
+                }
+                window.location.href = '/cart/';
+
+            } catch (error) {
+                console.error(`Error: `,error);
+            }
+        }
+
+        const removeItem = async (id)=>{
+            console.log(id);
+
+            try
+            {
+                const response = await fetch('/cart/remove-item-from-cart/', {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': csrftoken
+                    },
+                    mode: 'same-origin', // Do not send CSRF token to another domain.
+                    cache: "no-cache",
+                    body: JSON.stringify({id: id}), // body data type must match "Content-Type" header
+                });
+                const results = await response.json();
+
+
+                console.log(results);
+
+                //window.location.href = '/cart/';
+
+            } catch (error) {
+                console.error(`Error: `,error);
+            }
+        }
+
+        const clearCart = async ()=>{
+
+            try
+            {
+                const response = await fetch('/cart/clear-cart/', {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'X-CSRFToken': csrftoken
+                    },
+                    mode: 'same-origin', // Do not send CSRF token to another domain.
+                    cache: "no-cache",
+
+                });
+                const results = await response.json();
+
+                if(results.success){
+                    console.log(results.message);
+                }
+                window.location.href = '/cart/';
+
+            } catch (error) {
+                console.error(`Error: `,error);
+            }
+        }
+
+        const cartCheckout = ()=>{
+            window.location.href = '/cart/checkout/';
+        }
+
+         const goHome = ()=>{
+            window.location.href = '/';
+        }
+    </script>
+{% endblock %}
+

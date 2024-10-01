@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Ngọc Nhân">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <!--BEGIN BOOTSTRAP STYLE-->
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    <!--END BOOTSTRAP STYLE-->
+    <!--BEGIN FONTAWESOME-->
+    <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <!--END FONTAWESOME-->
+    <!--BEGIN CSS CUSTOM-->
+    {% block css %}{% endblock %}
+    <!--END CSS CUSTOM-->
+</head>
+<body>
+{% include 'header.html' %}
+<main class="my-5">
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                Footer Col 1
+            </div>
+            <div class="col">
+                Footer Col 2
+            </div>
+            <div class="col">
+                Footer Col 3
+            </div>
+            <div class="col">
+                Footer Col 4
+            </div>
+        </div>
+    </div>
+</footer>
+<!--BEGIN BOOTSTRAP JS-->
+{% bootstrap_javascript %}
+<!--END BOOTSTRAP JS-->
+<!--BEGIN JS CUSTOM -->
+{% block js %}{% endblock %}
+<!--END JS CUSTOM -->
+</body>
+</html>

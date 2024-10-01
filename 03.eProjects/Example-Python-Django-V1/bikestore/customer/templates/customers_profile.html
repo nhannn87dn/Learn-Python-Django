@@ -1,0 +1,22 @@
+{% extends "customers-layout.html" %}
+{% load static %}
+{% block title %}
+Customer Profile
+{% endblock %}
+
+{% block content %}
+<h1>Customer Profile</h1>
+<div class="container mt-4">
+    <table class="table">
+        <tbody>
+            {% for key, value in profile_info.items %}
+                <tr>
+                    <th>{{ key }}</th>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
