@@ -73,20 +73,20 @@ Ví dụ bạn đang đứng ở vị trí `D:\Test-Django\projectBikeStore\`
 Command Prompt của Windows
 
 ```bash
-D:\Test-Django\projectBikeStore>py -m venv venvBikeStore
+D:\Test-Django\projectBikeStore>py -m venv .env
 ```
 
 Terminal của Mac/Ubuntu
 
 ```bash
-python -m venv venvBikeStore
+python -m venv .env
 ```
 
-Trong đó `venvBikeStore` là tên của folder chứa cấu hình môi trường ảo cho dự án với cấu trúc file/ thư mục như sau:
+Trong đó `.env` là tên của folder chứa cấu hình môi trường ảo cho dự án với cấu trúc file/ thư mục như sau:
 
 
 ```html
-├── venvBikeStore
+├── .env
 │   ├── Include
 │   ├── Lib
 │   ├── Scripts
@@ -105,13 +105,13 @@ Cấu trúc thư mục của môi trường ảo Python (venv) gồm các thành
 Command Prompt của Windows
 
 ```bash
-D:\Test-Django\projectBikeStore>venvBikeStore\Scripts\activate.bat
+D:\Test-Django\projectBikeStore>.env\Scripts\activate.bat
 ```
 
 Terminal của Mac/Ubuntu
 
 ```bash
-source  venvBikeStore/bin/activate
+source  .env/bin/activate
 ```
 
 Sau đó bạn sẽ thấy được kết quả
@@ -119,13 +119,13 @@ Sau đó bạn sẽ thấy được kết quả
 Command Prompt của Windows
 
 ```bash
-(venvBikeStore) D:\Test-Django\projectBikeStore>
+(.env) D:\Test-Django\projectBikeStore>
 ```
 
 Terminal của Mac/Ubuntu
 
 ```bash
-(venvBikeStore) ...$
+(.env) ...$
 ```
 
 
@@ -146,13 +146,13 @@ Sau khi bạn activated môi trường ảo xong. Để cài đặt `Django fram
 Command Prompt của Windows
 
 ```bash
-(venvBikeStore) D:\Test-Django\projectBikeStore>py -m pip install Django
+(.env) D:\Test-Django\projectBikeStore>py -m pip install Django
 ```
 
 Terminal của Mac/Ubuntu
 
 ```bash
-(venvBikeStore) ...$ python -m pip install Django
+(.env) ...$ python -m pip install Django
 ```
 
 Sau đó hệ thống sẽ tải và cài đặt Django trong môi trường ảo.
@@ -178,7 +178,7 @@ Khi đó `projectBikeStore` của bạn sẽ có cấu trúc thư mục như sau
     │       ├── settings.py
     │       ├── urls.py
     │       └── wsgi.py
-    ├── venvBikeStore
+    ├── .env
 ```
 
 Bao gồm folder cấu hình môi trường ảo và folder chứa code dự án.
@@ -206,15 +206,15 @@ Trong cấu trúc thư mục trên
 Command Prompt của Windows
 
 ```bash
-(venvBikeStore) D:\Test-Django\projectBikeStore>cd bikestore
-(venvBikeStore) D:\Test-Django\projectBikeStore\bikestore>py manage.py runserver
+(.env) D:\Test-Django\projectBikeStore>cd bikestore
+(.env) D:\Test-Django\projectBikeStore\bikestore>py manage.py runserver
 ```
 
 Terminal của Mac/Ubuntu
 
 ```bash
-(venvBikeStore) ...$ cd bikestore
-(venvBikeStore) ...$ python manage.py runserver
+(.env) ...$ cd bikestore
+(.env) ...$ python manage.py runserver
 ```
 
 Bạn sẽ thấy được kết quả ở cửa số lệnh
@@ -307,7 +307,7 @@ Kết quả cử mỗi app bạn tạo ra hệ thống sẽ sinh ra một folder
     │       ├── tests.py
     │       ├── views.py
     │       └── url.py (Không có khi tạo)
-    ├── venvBikeStore
+    ├── .env
 ```
 
 Trong đó, các file có chức năng như sau:
